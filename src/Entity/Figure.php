@@ -6,6 +6,7 @@ use App\Repository\FigureRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 
 /**
  * @ORM\Entity(repositoryClass=FigureRepository::class)
@@ -64,6 +65,11 @@ class Figure
      */
     private $groupFigure;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $slug;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -84,7 +90,7 @@ class Figure
     public function setName(string $name): self
     {
         $this->name = $name;
-
+        $this->setSlug($this->name);
         return $this;
     }
 
@@ -234,6 +240,19 @@ class Figure
     public function setGroupFigure(?Group $groupFigure): self
     {
         $this->groupFigure = $groupFigure;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $asciiSlugger = new AsciiSlugger();
+        $this->slug = $asciiSlugger->slug($slug);
 
         return $this;
     }
