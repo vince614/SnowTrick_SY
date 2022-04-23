@@ -53,7 +53,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="figure_show", methods={"GET"})
+     * @Route("/figure/{id}", name="figure_show", methods={"GET"})
      * @param Figure $figure
      * @return Response
      */
