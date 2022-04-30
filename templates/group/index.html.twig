@@ -17,6 +17,10 @@
             <tr>
                 <td>{{ group.id }}</td>
                 <td>{{ group.name }}</td>
+                <td>
+                    <a href="{{ path('group_show', {'id': group.id}) }}">show</a>
+                    <a href="{{ path('group_edit', {'id': group.id}) }}">edit</a>
+                </td>
             </tr>
         {% else %}
             <tr>

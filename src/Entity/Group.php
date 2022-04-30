@@ -26,7 +26,7 @@ class Group
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="groupFigure")
+     * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="group")
      */
     private $figure;
 

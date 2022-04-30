@@ -4,10 +4,10 @@ namespace App\Form;
 
 use App\Entity\Figure;
 use App\Entity\Group;
-use App\Entity\Image;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -27,24 +27,17 @@ class FigureType extends AbstractType
         $builder
             ->add('name')
             ->add('description')
-            ->add('groupe',
-                EntityType::class,
-                [
-                    'class'         => Group::class,
-                    'choice_label'  => 'groupe',
-                    'multiple'      => true,
-                    'required'      => false,
-                    'query_builder' => function (EntityRepository $entityRepository) {
-                        return $entityRepository->createQueryBuilder('g')
-                            ->select('g')
-                            ->orderBy('name', 'ASC');
-                    }
-                ]
-            )
-            ->add('slug')
-            ->add('groupFigure')
-            ->add('submit', SubmitType::class)
-        ;
+            ->add('group',
+                EntityType::class, [
+                    'class' => Group::class,
+                    'choice_label' => 'name',
+                    'required' => false,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('c')
+                            ->orderBy('c.name', 'ASC');
+                    },
+                ])
+            ->add('slug');
     }
 
     /**

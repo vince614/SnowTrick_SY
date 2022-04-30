@@ -31,11 +31,6 @@ class Figure
     private $description;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $groupe;
-
-    /**
      * @ORM\Column(type="array")
      */
     private $pictures = [];
@@ -63,7 +58,7 @@ class Figure
     /**
      * @ORM\ManyToOne(targetEntity=Group::class, inversedBy="figure")
      */
-    private $groupFigure;
+    private $group;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -102,18 +97,6 @@ class Figure
     public function setDescription(string $description): self
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getGroupe(): ?int
-    {
-        return $this->groupe;
-    }
-
-    public function setGroupe(int $groupe): self
-    {
-        $this->groupe = $groupe;
 
         return $this;
     }
@@ -232,14 +215,14 @@ class Figure
         return $this;
     }
 
-    public function getGroupFigure(): ?Group
+    public function getGroup(): ?Group
     {
-        return $this->groupFigure;
+        return $this->group;
     }
 
-    public function setGroupFigure(?Group $groupFigure): self
+    public function setGroup(?Group $group): self
     {
-        $this->groupFigure = $groupFigure;
+        $this->group = $group;
 
         return $this;
     }

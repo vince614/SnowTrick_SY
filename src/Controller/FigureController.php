@@ -6,16 +6,32 @@ use App\Entity\Category;
 use App\Entity\Figure;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
+use App\Repository\GroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Managers\FigureManager;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class FigureController
+ * @package App\Controller
+ *
+ * @Route("/figure")
+ */
 class FigureController extends AbstractController
 {
+    /** @var GroupRepository  */
+    private $groupRepository;
+
+    public function __construct(GroupRepository $groupRepository)
+    {
+        $this->groupRepository = $groupRepository;
+    }
+
 
     /**
      * @Route("/", name="figure_index", methods={"GET"})
@@ -30,10 +46,11 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/new", name="figure_new", methods={"GET", "POST"})
+     * @Route("/new", name="figure_new", methods={"GET", "POST"})
      * @param Request $request
      * @param FigureManager $figureManager
      * @return RedirectResponse|Response
+     * @throws Exception
      */
     public function new(Request $request, FigureManager $figureManager)
     {
@@ -53,14 +70,14 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/figure/{id}", name="figure_show", methods={"GET"})
+     * @Route("/{id}", name="figure_show", methods={"GET"})
      * @param Figure $figure
      * @return Response
      */
     public function show(Figure $figure): Response
     {
         return $this->render('figure/show.html.twig', [
-            'category' => $figure,
+            'figure' => $figure,
         ]);
     }
 
@@ -69,6 +86,7 @@ class FigureController extends AbstractController
      * @param Request $request
      * @param FigureManager $figureManager
      * @return Response
+     * @throws Exception
      */
     public function edit(Request $request, FigureManager $figureManager): Response
     {
@@ -90,7 +108,7 @@ class FigureController extends AbstractController
 
 
     /**
-     * @Route("/{id}", name="figure_delete", methods={"POST"})
+     * @Route("/{id}", name="figure_delete", methods={"POST","GET"})
      * @param Request $request
      * @param Figure $figure
      * @param EntityManagerInterface $entityManager

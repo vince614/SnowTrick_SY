@@ -2,7 +2,11 @@
 
 namespace App\Managers;
 
+use App\Entity\Figure;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 /**
  * Class FigureManager
@@ -21,9 +25,10 @@ class FigureManager extends AbstractManager
 
     /**
      * Save entity
-     * @param $entity
+     * @param Figure $entity
+     * @throws Exception
      */
-    public function save($entity)
+    public function save(Figure $entity)
     {
         $this->initialise($entity);
         $this->entityManager->persist($entity);
@@ -33,10 +38,14 @@ class FigureManager extends AbstractManager
     /**
      * Initialise entity before save
      *
-     * @param $entity
+     * @param Figure $entity
+     * @throws Exception
      */
-    protected function initialise($entity)
+    protected function initialise(Figure $entity)
     {
-
+        if (!$entity->getId()) {
+            $currentTime = new DateTimeImmutable();
+            $entity->setCreatedAt($currentTime);
+        }
     }
 }

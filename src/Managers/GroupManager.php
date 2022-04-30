@@ -2,6 +2,7 @@
 
 namespace App\Managers;
 
+use App\Entity\Group;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -21,9 +22,9 @@ class GroupManager extends AbstractManager
 
     /**
      * Save entity
-     * @param $entity
+     * @param Group $entity
      */
-    public function save($entity)
+    public function save(Group $entity)
     {
         $this->initialise($entity);
         $this->entityManager->persist($entity);
@@ -33,9 +34,9 @@ class GroupManager extends AbstractManager
     /**
      * Initialise entity before save
      *
-     * @param $entity
+     * @param Group $entity
      */
-    protected function initialise($entity)
+    protected function initialise(Group $entity)
     {
 
     }

@@ -1,0 +1,8 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New account{% endblock %}
+
+{% block body %}
+    <h1>Create new account</h1>
+    {{ include('user/_form.html.twig', {'button_label': 'Register'}) }}
+{% endblock %}
