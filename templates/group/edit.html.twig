@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Group{% endblock %}
+
+{% block body %}
+    <h1>Edit Group</h1>
+
+    {{ include('group/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('group_list') }}">back to list</a>
+
+{% endblock %}
