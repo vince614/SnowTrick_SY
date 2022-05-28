@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1>Figure</h1>
+
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ figure.id }}</td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td>{{ figure.name }}</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>{{ figure.description }}</td>
+        </tr>
+        <tr>
+            <th>Created at</th>
+            <td>{{ figure.createdAt.format('Y-m-d H:i:s') }}</td>
+        </tr>
+        <tr>
+            <th>Slug</th>
+            <td>{{ figure.slug }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('figure_edit', {'id': figure.id}) }}">Edit</a>
+    <form method="post" action="{{ path('figure_delete', {'id': figure.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ figure.id) }}">
+        <button class="btn">Delete</button>
+    </form>
+
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

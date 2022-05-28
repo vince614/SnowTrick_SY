@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=CommentRepository::class)
  */
-class Comment
+class Comment implements EntityInterface
 {
     /**
      * @ORM\Id

@@ -24,15 +24,6 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class FigureController extends AbstractController
 {
-    /** @var GroupRepository  */
-    private $groupRepository;
-
-    public function __construct(GroupRepository $groupRepository)
-    {
-        $this->groupRepository = $groupRepository;
-    }
-
-
     /**
      * @Route("/", name="figure_index", methods={"GET"})
      * @param FigureRepository $figureRepository
@@ -70,7 +61,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="figure_show", methods={"GET"})
+     * @Route("/show/{slug}", name="figure_show", methods={"GET"})
      * @param Figure $figure
      * @return Response
      */
@@ -82,7 +73,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="figure_edit", methods={"GET", "POST"})
+     * @Route("/edit/{id}", name="figure_edit", methods={"GET", "POST"})
      * @param Request $request
      * @param FigureManager $figureManager
      * @return Response
@@ -108,7 +99,7 @@ class FigureController extends AbstractController
 
 
     /**
-     * @Route("/{id}", name="figure_delete", methods={"POST","GET"})
+     * @Route("/delete/{id}", name="figure_delete", methods={"POST","GET"})
      * @param Request $request
      * @param Figure $figure
      * @param EntityManagerInterface $entityManager

@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  */
-class User
+class User implements EntityInterface
 {
     /**
      * @ORM\Id

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\FigureRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +12,7 @@ use Symfony\Component\String\Slugger\AsciiSlugger;
 /**
  * @ORM\Entity(repositoryClass=FigureRepository::class)
  */
-class Figure
+class Figure implements EntityInterface
 {
     /**
      * @ORM\Id
@@ -72,16 +73,26 @@ class Figure
         $this->videos = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getName(): ?string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return $this
+     */
     public function setName(string $name): self
     {
         $this->name = $name;
@@ -89,11 +100,18 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
+    /**
+     * @param string $description
+     * @return $this
+     */
     public function setDescription(string $description): self
     {
         $this->description = $description;
@@ -101,11 +119,18 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return array|null
+     */
     public function getPictures(): ?array
     {
         return $this->pictures;
     }
 
+    /**
+     * @param array $pictures
+     * @return $this
+     */
     public function setPictures(array $pictures): self
     {
         $this->pictures = $pictures;
@@ -113,12 +138,19 @@ class Figure
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    /**
+     * @return DateTimeImmutable|null
+     */
+    public function getCreatedAt(): ?DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    /**
+     * @param DateTimeImmutable $created_at
+     * @return $this
+     */
+    public function setCreatedAt(DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
 
@@ -133,6 +165,10 @@ class Figure
         return $this->images;
     }
 
+    /**
+     * @param Image $image
+     * @return $this
+     */
     public function addImage(Image $image): self
     {
         if (!$this->images->contains($image)) {
@@ -143,6 +179,10 @@ class Figure
         return $this;
     }
 
+    /**
+     * @param Image $image
+     * @return $this
+     */
     public function removeImage(Image $image): self
     {
         if ($this->images->removeElement($image)) {
@@ -163,6 +203,10 @@ class Figure
         return $this->comments;
     }
 
+    /**
+     * @param Comment $comment
+     * @return $this
+     */
     public function addComment(Comment $comment): self
     {
         if (!$this->comments->contains($comment)) {
@@ -173,6 +217,10 @@ class Figure
         return $this;
     }
 
+    /**
+     * @param Comment $comment
+     * @return $this
+     */
     public function removeComment(Comment $comment): self
     {
         if ($this->comments->removeElement($comment)) {
@@ -193,6 +241,10 @@ class Figure
         return $this->videos;
     }
 
+    /**
+     * @param Video $video
+     * @return $this
+     */
     public function addVideo(Video $video): self
     {
         if (!$this->videos->contains($video)) {
@@ -203,6 +255,10 @@ class Figure
         return $this;
     }
 
+    /**
+     * @param Video $video
+     * @return $this
+     */
     public function removeVideo(Video $video): self
     {
         if ($this->videos->removeElement($video)) {
@@ -215,11 +271,18 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return Group|null
+     */
     public function getGroup(): ?Group
     {
         return $this->group;
     }
 
+    /**
+     * @param Group|null $group
+     * @return $this
+     */
     public function setGroup(?Group $group): self
     {
         $this->group = $group;
@@ -227,11 +290,18 @@ class Figure
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getSlug(): ?string
     {
         return $this->slug;
     }
 
+    /**
+     * @param string $slug
+     * @return $this
+     */
     public function setSlug(string $slug): self
     {
         $asciiSlugger = new AsciiSlugger();

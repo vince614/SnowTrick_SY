@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=ImageRepository::class)
  */
-class Image
+class Image implements EntityInterface
 {
     /**
      * @ORM\Id

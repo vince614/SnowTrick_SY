@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass=GroupRepository::class)
  * @ORM\Table(name="`group`")
  */
-class Group
+class Group implements EntityInterface
 {
     /**
      * @ORM\Id

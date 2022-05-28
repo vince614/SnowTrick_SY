@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\RegisterType;
 use App\Form\UserType;
-use App\Repository\UserRepository;
+use App\Managers\UserManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,32 +21,7 @@ class UserController extends AbstractController
 {
 
     /**
-     * @Route("/register", name="user_register", methods={"GET", "POST"})
-     * @param Request $request
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('figure_list', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('user/new.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="user_show", methods={"GET"})
+     * @Route("/user/{id}", name="user_show", methods={"GET"})
      * @param User $user
      * @return Response
      */
@@ -74,6 +51,32 @@ class UserController extends AbstractController
         }
 
         return $this->renderForm('user/edit.html.twig', [
+            'user' => $user,
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * Register user
+     *
+     * @Route("/register", name="user_register", methods={"GET", "POST"})
+     * @param Request $request
+     * @param UserManager $userManager
+     * @return Response
+     * @throws Exception
+     */
+    public function register(Request $request, UserManager $userManager): Response
+    {
+        $user = new User();
+        $form = $this->createForm(RegisterType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userManager->save($user);
+            return $this->redirectToRoute('figure_list', [], Response::HTTP_SEE_OTHER);
+        }
+
+        return $this->renderForm('user/new.html.twig', [
             'user' => $user,
             'form' => $form,
         ]);

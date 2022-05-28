@@ -21,17 +21,6 @@ class GroupManager extends AbstractManager
     }
 
     /**
-     * Save entity
-     * @param Group $entity
-     */
-    public function save(Group $entity)
-    {
-        $this->initialise($entity);
-        $this->entityManager->persist($entity);
-        $this->entityManager->flush();
-    }
-
-    /**
      * Initialise entity before save
      *
      * @param Group $entity
