@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class FigureController
  * @package App\Controller
  *
- * @Route("/figure")
+ * @Route("/")
  */
 class FigureController extends AbstractController
 {
@@ -37,13 +37,13 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="figure_new", methods={"GET", "POST"})
+     * @Route("/figure/new", name="figure_new", methods={"GET", "POST"})
      * @param Request $request
      * @param FigureManager $figureManager
      * @return RedirectResponse|Response
      * @throws Exception
      */
-    public function new(Request $request, FigureManager $figureManager)
+    public function new(Request $request, FigureManager $figureManager): RedirectResponse|Response
     {
         $figure = new Figure();
         $form = $this->createForm(FigureType::class, $figure);
@@ -61,7 +61,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/show/{slug}", name="figure_show", methods={"GET"})
+     * @Route("/figure/show/{slug}", name="figure_show", methods={"GET"})
      * @param Figure $figure
      * @return Response
      */
@@ -73,7 +73,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * @Route("/edit/{id}", name="figure_edit", methods={"GET", "POST"})
+     * @Route("/figure/edit/{id}", name="figure_edit", methods={"GET", "POST"})
      * @param Request $request
      * @param FigureManager $figureManager
      * @return Response
@@ -96,10 +96,8 @@ class FigureController extends AbstractController
         ]);
     }
 
-
-
     /**
-     * @Route("/delete/{id}", name="figure_delete", methods={"POST","GET"})
+     * @Route("/figure/delete/{id}", name="figure_delete", methods={"POST","GET"})
      * @param Request $request
      * @param Figure $figure
      * @param EntityManagerInterface $entityManager
