@@ -1,5 +1,10 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
+@import '~mdb-ui-kit/css/mdb.min.css';
 
 body {
-    background-color: lightgray;
+    background-color: #d2d0d0;
+}
+
+.container {
+    margin-top: 100px;
 }

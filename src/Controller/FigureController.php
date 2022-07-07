@@ -2,11 +2,9 @@
 
 namespace App\Controller;
 
-use App\Entity\Category;
 use App\Entity\Figure;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
-use App\Repository\GroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Managers\FigureManager;
 use Exception;

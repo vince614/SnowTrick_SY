@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Serializable;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @method string getUserIdentifier()
  */
-class User implements UserInterface, Serializable, \App\Entity\EntityInterface
+class User implements UserInterface, Serializable, EntityInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -55,7 +56,12 @@ class User implements UserInterface, Serializable, \App\Entity\EntityInterface
     /**
      * @ORM\Column(type="datetime_immutable")
      */
-    private $token_created_at;
+    private ?\DateTimeImmutable $token_created_at;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private array $roles = [];
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="user")
@@ -204,9 +210,23 @@ class User implements UserInterface, Serializable, \App\Entity\EntityInterface
             ) = unserialize($data, ['allowed_classes' => false]);
     }
 
-    public function getRoles()
+    /**
+     * @return array
+     */
+    public function getRoles(): array
     {
-        // TODO: Implement getRoles() method.
+        $roles = $this->roles;
+        return array_unique($roles);
+    }
+
+    /**
+     * @param array $roles
+     * @return $this
+     */
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+        return $this;
     }
 
     public function getSalt()

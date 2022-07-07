@@ -11,5 +11,7 @@ import './styles/app.css';
 // start the Stimulus application
 import './bootstrap';
 
+import 'mdb-ui-kit';
+
 
 require ('bootstrap');

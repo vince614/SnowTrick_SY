@@ -6,7 +6,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\NonUniqueResultException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Exception;
 
 /**
@@ -14,17 +14,16 @@ use Exception;
  */
 class UserManager extends AbstractManager
 {
-    /** @var UserRepository  */
-    protected $_userRepository;
+    private $passwordEncoder;
 
     /**
      * FigureManager constructor.
      * @param EntityManagerInterface $entityManager
      * @param UserRepository $userRepository
      */
-    public function __construct(EntityManagerInterface $entityManager, UserRepository $userRepository)
+    public function __construct(EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordEncoder)
     {
-        $this->_userRepository = $userRepository;
+        $this->passwordEncoder = $passwordEncoder;
         parent::__construct($entityManager);
     }
 
@@ -38,12 +37,30 @@ class UserManager extends AbstractManager
     {
         if (!$entity->getId()) {
             $currentTime = new DateTimeImmutable();
+            $this->encodePassword($entity);
             $entity
                 ->setActived(false)
                 ->setToken($this->_generateToken())
+                ->setRoles([])
                 ->setTokenCreatedAt($currentTime)
                 ->setCreatedAt($currentTime);
         }
+    }
+
+    /**
+     * Encode password of user
+     *
+     * @param User $user
+     * @return void
+     */
+    private function encodePassword(User $user): void
+    {
+        $user->setPassword(
+            $this->passwordEncoder->hashPassword(
+                $user,
+                $user->getPassword()
+            )
+        );
     }
 
     /**
