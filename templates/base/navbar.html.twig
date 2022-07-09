@@ -24,11 +24,13 @@
             </a>
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Figures</a>
+                    <a class="nav-link" href="{{ path('figure_index') }}">Figures</a>
                 </li>
+                {% if is_granted('ROLE_ADMIN') %}
                 <li class="nav-item">
                     <a class="nav-link" href="/admin">Administration</a>
                 </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link" href="/">Projects</a>
                 </li>
@@ -54,22 +56,22 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
                     <li>
-                        <a class="dropdown-item" href="/profile">My profile</a>
+                        <a class="dropdown-item" href="/profile">Mon profile</a>
                     </li>
+                    {% if is_granted('ROLE_ADMIN') %}
                     <li>
                         <a class="dropdown-item" href="/admin">Administration</a>
                     </li>
+                    {% endif %}
                     {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                     <li>
-                        <a class="dropdown-item bg-danger" href="{{ path('app_login') }}">Login</a>
+                        <a class="dropdown-item bg-danger" href="{{ path('app_login') }}">Connection</a>
                     </li>
                     {% else %}
                     <li>
-                        <a class="dropdown-item bg-danger" href="{{ path('app_logout') }}">Logout {{ app.user.username }}</a>
+                        <a class="dropdown-item bg-danger" href="{{ path('app_logout') }}">Déconecter {{ app.user.username }}</a>
                     </li>
                     {% endif %}
-
-
                 </ul>
             </div>
         </div>

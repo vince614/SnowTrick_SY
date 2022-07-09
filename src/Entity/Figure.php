@@ -66,6 +66,11 @@ class Figure implements EntityInterface
      */
     private $slug;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $image_url;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -305,7 +310,20 @@ class Figure implements EntityInterface
     public function setSlug(string $slug): self
     {
         $asciiSlugger = new AsciiSlugger();
-        $this->slug = $asciiSlugger->slug($slug);
+        $this->slug = $asciiSlugger->slug(
+            strtolower($slug)
+        );
+        return $this;
+    }
+
+    public function getImageUrl(): ?string
+    {
+        return $this->image_url;
+    }
+
+    public function setImageUrl(string $image_url): self
+    {
+        $this->image_url = $image_url;
 
         return $this;
     }

@@ -14,7 +14,14 @@ use Exception;
  */
 class UserManager extends AbstractManager
 {
-    private $passwordEncoder;
+
+    /**
+     * Roles
+     */
+    const ROLE_USER = "ROLE_USER";
+    const ROLE_ADMIN = "ROLE_ADMIN";
+
+    private UserPasswordHasherInterface $passwordEncoder;
 
     /**
      * FigureManager constructor.
@@ -41,7 +48,7 @@ class UserManager extends AbstractManager
             $entity
                 ->setActived(false)
                 ->setToken($this->_generateToken())
-                ->setRoles([])
+                ->setRoles([self::ROLE_USER])
                 ->setTokenCreatedAt($currentTime)
                 ->setCreatedAt($currentTime);
         }

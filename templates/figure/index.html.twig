@@ -2,34 +2,32 @@
 
 {% block title %}Figure index{% endblock %}
 
+{% block header %}
+    <!-- Background image -->
+    <div class="p-5 text-center bg-image" style="background-image: url('https://snowtricks.thibaut-tourte.com/images/home.jpg');height: 600px;">
+        <div class="mask" style="background-color: rgba(0, 0, 0, .4);">
+            <div class="d-flex justify-content-center align-items-center h-100">
+                <div class="text-white">
+                    <h1 class="mb-3">SnowTrick</h1>
+                    <h4 class="mb-3">Découvrez les meilleurs figure de snowboard sur notre site.</h4>
+                    <a class="btn btn-outline-light btn-lg" href="#groups" role="button">Cétégorie de figure</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Background image -->
+{% endblock %}
 {% block body %}
-    <h1>Figure index</h1>
+    <h1 class="text-uppercase fw-bolder">Types de figures</h1>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for figure in figures %}
-            <tr>
-                <td>{{ figure.id }}</td>
-                <td>{{ figure.name }}</td>
-                <td>
-                    <a href="{{ path('figure_show', {'slug': figure.slug}) }}">show</a>
-                    <a href="{{ path('figure_edit', {'id': figure.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div id="groups">
+        <div>
+            {% for group in groups %}
+            <a href="{{ path('figures_group', {'id': group.id}) }}" class="btn btn-primary">{{ group.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
 
-    <a href="{{ path('figure_new') }}">Create new</a>
+    <hr>
+    <a class="btn btn-success" href="{{ path('figure_new') }}">Create new figure</a>
 {% endblock %}

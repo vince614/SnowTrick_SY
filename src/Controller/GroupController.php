@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Group;
 use App\Form\GroupType;
 use App\Managers\GroupManager;
+use App\Repository\FigureRepository;
 use App\Repository\GroupRepository;
 use http\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -67,14 +68,15 @@ class GroupController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="group_show", methods={"GET"})
+     * @Route("/{id}", name="figures_group", methods={"GET"})
      * @param Group $group
+     * @param FigureRepository $figureRepository
      * @return Response
      */
-    public function show(Group $group): Response
+    public function showByGroup(Group $group, FigureRepository $figureRepository): Response
     {
-        return $this->render('group/show.html.twig', [
-            'group' => $group,
+        return $this->render('figure/list.html.twig', [
+            'figures' => $figureRepository->findBy(['group' => $group->getId()])
         ]);
     }
 

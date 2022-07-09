@@ -37,7 +37,7 @@ class FigureType extends AbstractType
                             ->orderBy('c.name', 'ASC');
                     },
                 ])
-            ->add('slug');
+            ->add('imageUrl');
     }
 
     /**

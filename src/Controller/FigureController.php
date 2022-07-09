@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Entity\Group;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
+use App\Repository\GroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Managers\FigureManager;
 use Exception;
@@ -25,12 +27,14 @@ class FigureController extends AbstractController
     /**
      * @Route("/", name="figure_index", methods={"GET"})
      * @param FigureRepository $figureRepository
+     * @param GroupRepository $groupRepository
      * @return Response
      */
-    public function index(FigureRepository $figureRepository): Response
+    public function index(FigureRepository $figureRepository, GroupRepository $groupRepository): Response
     {
         return $this->render('figure/index.html.twig', [
             'figures' => $figureRepository->findAll(),
+            'groups' => $groupRepository->findAll(),
         ]);
     }
 

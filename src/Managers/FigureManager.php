@@ -33,7 +33,9 @@ class FigureManager extends AbstractManager
     {
         if (!$entity->getId()) {
             $currentTime = new DateTimeImmutable();
-            $entity->setCreatedAt($currentTime);
+            $entity
+                ->setSlug($entity->getName())
+                ->setCreatedAt($currentTime);
         }
     }
 }
