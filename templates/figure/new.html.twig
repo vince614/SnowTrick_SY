@@ -1,11 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Figure{% endblock %}
+{% block title %}Nouvelle figure{% endblock %}
 
 {% block body %}
-    <h1>Create new Figure</h1>
-
+    <h1>Crée une nouvelle figure</h1>
     {{ include('figure/_form.html.twig') }}
-
-    <a href="{{ path('figure_index') }}">back to list</a>
+    <a class="btn my-1" href="{{ path('figure_index') }}">Retour</a>
 {% endblock %}
