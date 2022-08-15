@@ -63,6 +63,8 @@ class FigureController extends AbstractController
     }
 
     /**
+     * Show figure card
+     *
      * @Route("/figure/show/{slug}", name="figure_show", methods={"GET"})
      * @param Figure $figure
      * @return Response
@@ -75,6 +77,22 @@ class FigureController extends AbstractController
     }
 
     /**
+     * Figures list
+     *
+     * @Route("/figure/list", name="figure_list", methods={"GET"})
+     * @param FigureRepository $figureRepository
+     * @return Response
+     */
+    public function list(FigureRepository $figureRepository): Response
+    {
+        return $this->render('figure/list.html.twig', [
+            'figures' => $figureRepository->findAll()
+        ]);
+    }
+
+    /**
+     * Edit figure
+     *
      * @Route("/figure/edit/{id}", name="figure_edit", methods={"GET", "POST"})
      * @param Request $request
      * @param FigureManager $figureManager
@@ -99,6 +117,8 @@ class FigureController extends AbstractController
     }
 
     /**
+     * Delete figure
+     *
      * @Route("/figure/delete/{id}", name="figure_delete", methods={"POST","GET"})
      * @param Request $request
      * @param Figure $figure
