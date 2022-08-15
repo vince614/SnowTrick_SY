@@ -19,13 +19,3 @@ yarn-error.log
 ###< PhpStorm ignore config ###
 .idea
 
-
-define('AUTH_KEY',         'yF3USI<$:bkI|{AyoVHk++OH6{.Hfl&AGJq] 7}(*ma<O`fwGSOr1g+TwL9@8g|{');
-define('SECURE_AUTH_KEY',  '<x)b}U6Uh&XQ7Ew3BB*W?g9}j8(|hy<VFR81u-Mu%}r,CKfP4hQd2&WL^-Vmv.tL');
-define('LOGGED_IN_KEY',    '|sE$?zLv&>Y#-.x^f-DsN)^V)96@}y#[}Nw9-bA/Lf>_Kw*@q6o$wPeSr/ H-;|x');
-define('NONCE_KEY',        'UyD6!]+yW<>mFz,u<NLK*&7l&4|}Sv+rAI-o7wJ([(K8e47iyemI U0+[SY)kNOR');
-define('AUTH_SALT',        'v$/RM..GkHRj!= v`pQTbt4?P7KU0EXumbfW~5|`|0>QMIZNXn?;.7S/=b-UW]LJ');
-define('SECURE_AUTH_SALT', '5m.q y@-+1E7UqR|w<qSv]2.?W&-/d<*W0}oyJ+_es[nb-aKOO}?,.VEVEOz`|9]');
-define('LOGGED_IN_SALT',   'mCNCvzdq-P5|^O=zp+pso+IA-t1+>NWZgQ:T%h1PCKM_q_{2&%,o|b-k|Y)d-ILk');
-define('NONCE_SALT',       'F5vF94C8<eBg^d0K%7/^h8<`<TB.qp/P6u^f(W~[;)b50)$@,<R<3E|}h0I,{7qP');
-
