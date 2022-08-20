@@ -18,16 +18,16 @@
     <!-- Background image -->
 {% endblock %}
 {% block body %}
-    <div class="card-group">
+    <div class="card_container flex-row" style="flex-direction: row!important; display: flex; flex-wrap: wrap; justify-content: space-around;">
         {% for figure in figures %}
-            <div class="card" style="width: 18rem;">
+            <div class="card" style="width: 18rem; margin: 5px;">
                 <img class="card-img-top" src="{{ figure.imageUrl }}" alt="Card image cap">
                 <div class="card-body">
                     <h5 class="card-title">{{ figure.name }}</h5>
-                    <span class="card-text" style="color: #7b7a7a;">Post crée le {{ figure.createdAt|date("d/m/Y") }}</span>
+                    <span class="card-text" style="color: #7b7a7a;"><small>Post crée le {{ figure.createdAt|date("d/m/Y") }}</small></span>
                     <p class="card-text">{{ figure.description|length > 100 ? figure.description|slice(0, 100) ~ '...' : figure.description }}</p>
-                    <div class="group">
-                        <a href="{{ path('figure_show', {'slug': figure.slug}) }}" class="btn btn-primary">Plus d'informations</a>
+                    <div class="btn-group">
+                        <a href="{{ path('figure_show', {'slug': figure.slug}) }}" class="btn btn-primary">Voir</a>
                         <a href="#" class="btn btn-danger">Editer</a>
                     </div>
                 </div>

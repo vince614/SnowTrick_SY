@@ -33,7 +33,8 @@ class FigureController extends AbstractController
     public function index(FigureRepository $figureRepository, GroupRepository $groupRepository): Response
     {
         return $this->render('figure/index.html.twig', [
-            'figures' => $figureRepository->findAll(),
+            // Find all with limit
+            'figures' => $figureRepository->findBy([], ['created_at' => 'DESC'], 20),
             'groups' => $groupRepository->findAll(),
         ]);
     }
