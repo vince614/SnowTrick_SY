@@ -5,7 +5,9 @@ namespace App\DataFixtures;
 use App\Entity\Figure;
 use App\Entity\Group;
 use App\Entity\User;
-use DateTimeImmutable;
+use App\Managers\FigureManager;
+use App\Managers\GroupManager;
+use App\Managers\UserManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
@@ -27,6 +29,24 @@ class AppFixtures extends Fixture
 
     /** @var array  */
     private array $_groups = [];
+
+    private UserManager $_userManager;
+    private FigureManager $_figureManager;
+    private GroupManager $_groupManager;
+
+    /**
+     * Injections of require dependencies
+     *
+     * @param UserManager $userManager
+     * @param FigureManager $figureManager
+     * @param GroupManager $groupManager
+     */
+    public function __construct(UserManager $userManager, FigureManager $figureManager, GroupManager $groupManager)
+    {
+        $this->_userManager = $userManager;
+        $this->_figureManager = $figureManager;
+        $this->_groupManager = $groupManager;
+    }
 
     /**
      * Load fixtures
@@ -55,18 +75,12 @@ class AppFixtures extends Fixture
     private function _createUsers(): void
     {
         for ($i = 0; $i < self::USERS_COUNT; $i++) {
-            $dateTime = new DateTimeImmutable();
             $user = new User();
             $user
-                ->setPassword($this->_faker->password)
                 ->setUsername($this->_faker->userName)
-                ->setCreatedAt($dateTime)
                 ->setEmail($this->_faker->email)
-                ->setActived($this->_faker->boolean())
-                ->setToken($this->_faker->linuxPlatformToken)
-                ->setRoles(["ROLE_USER"])
-                ->setTokenCreatedAt($dateTime);
-            $this->_manager->persist($user);
+                ->setPassword($this->_faker->password);
+            $this->_userManager->save($user);
         }
     }
 
@@ -81,7 +95,7 @@ class AppFixtures extends Fixture
             $group = new Group();
             $group->setName($groupName);
             $this->_groups[] = $group;
-            $this->_manager->persist($group);
+            $this->_groupManager->save($group);
         }
     }
 
@@ -94,16 +108,13 @@ class AppFixtures extends Fixture
     {
         foreach ($this->_groups as $group) {
             for ($i = 0; $i < self::FIGURES_COUNT; $i++) {
-                $dateTime = new DateTimeImmutable();
                 $figure = new Figure();
                 $figure
-                    ->setCreatedAt($dateTime)
-                    ->setDescription($this->_faker->text)
+                    ->setDescription($this->_faker->realText())
                     ->setImageUrl($this->_faker->imageUrl())
                     ->setName($this->_faker->name)
-                    ->setSlug($figure->getName())
                     ->setGroup($group);
-                $this->_manager->persist($figure);
+                $this->_figureManager->save($figure);
             }
         }
     }
