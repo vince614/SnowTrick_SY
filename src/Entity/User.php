@@ -68,6 +68,11 @@ class User implements UserInterface, Serializable, EntityInterface, PasswordAuth
      */
     private $comments;
 
+    /**
+     * @ORM\Column(type="string", length=1000)
+     */
+    private $avatarUrl;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -242,5 +247,17 @@ class User implements UserInterface, Serializable, EntityInterface, PasswordAuth
     public function __call($name, $arguments)
     {
         // TODO: Implement @method string getUserIdentifier()
+    }
+
+    public function getAvatarUrl(): ?string
+    {
+        return $this->avatarUrl;
+    }
+
+    public function setAvatarUrl(string $avatarUrl): self
+    {
+        $this->avatarUrl = $avatarUrl;
+
+        return $this;
     }
 }

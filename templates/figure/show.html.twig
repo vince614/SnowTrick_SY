@@ -25,68 +25,30 @@
 
     <div class="container">
         <div class="be-comment-block">
-            <h1 class="comments-title">Comments (3)</h1>
-            <div class="be-comment">
-                <div class="be-img-comment">
-                    <a href="blog-detail-2.html">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="" class="be-ava-comment">
-                    </a>
-                </div>
-                <div class="be-comment-content">
+            <h1 class="comments-title">Comment{{ figure.comments.count > 0 ? 's' : '' }} ({{ figure.comments.count }})</h1>
 
-				<span class="be-comment-name">
-					<a href="blog-detail-2.html">Ravi Sah</a>
-					</span>
-                    <span class="be-comment-time">
-					<i class="fa fa-clock-o"></i>
-					May 27, 2015 at 3:14am
-				</span>
+            {% for comment in figure.comments %}
+                <div class="be-comment">
+                    <div class="be-img-comment">
+                        <a href="{{ path('user_profile', {'id': comment.user.id }) }}">
+                            <img src="{{ comment.user.avatarUrl }}" alt="" class="be-ava-comment">
+                        </a>
+                    </div>
+                    <div class="be-comment-content">
+                    <span class="be-comment-name">
+                        <a href="{{ path('user_profile', {'id': comment.user.id }) }}">{{ comment.user.username }}</a>
+                        </span>
+                        <span class="be-comment-time">
+                        <i class="fa fa-clock-o"></i>
+                            {{ comment.createdAt.format('Y-m-d H:i:s') }}
+                    </span>
 
-                    <p class="be-comment-text">
-                        Pellentesque gravida tristique ultrices.
-                        Sed blandit varius mauris, vel volutpat urna hendrerit id.
-                        Curabitur rutrum dolor gravida turpis tristique efficitur.
-                    </p>
+                        <p class="be-comment-text">
+                            {{ comment.comment }}
+                        </p>
+                    </div>
                 </div>
-            </div>
-            <div class="be-comment">
-                <div class="be-img-comment">
-                    <a href="blog-detail-2.html">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="" class="be-ava-comment">
-                    </a>
-                </div>
-                <div class="be-comment-content">
-			<span class="be-comment-name">
-				<a href="blog-detail-2.html">Phoenix, the Creative Studio</a>
-			</span>
-                    <span class="be-comment-time">
-				<i class="fa fa-clock-o"></i>
-				May 27, 2015 at 3:14am
-			</span>
-                    <p class="be-comment-text">
-                        Nunc ornare sed dolor sed mattis. In scelerisque dui a arcu mattis, at maximus eros commodo. Cras magna nunc, cursus lobortis luctus at, sollicitudin vel neque. Duis eleifend lorem non ant. Proin ut ornare lectus, vel eleifend est. Fusce hendrerit dui in turpis tristique blandit.
-                    </p>
-                </div>
-            </div>
-            <div class="be-comment">
-                <div class="be-img-comment">
-                    <a href="blog-detail-2.html">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" class="be-ava-comment">
-                    </a>
-                </div>
-                <div class="be-comment-content">
-			<span class="be-comment-name">
-				<a href="blog-detail-2.html">Cüneyt ŞEN</a>
-			</span>
-                    <span class="be-comment-time">
-				<i class="fa fa-clock-o"></i>
-				May 27, 2015 at 3:14am
-			</span>
-                    <p class="be-comment-text">
-                        Cras magna nunc, cursus lobortis luctus at, sollicitudin vel neque. Duis eleifend lorem non ant
-                    </p>
-                </div>
-            </div>
+            {% endfor %}
             <hr/>
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <h3>Ecrire un commentaire</h3>
@@ -97,7 +59,7 @@
                                 <textarea class="form-input" required="" placeholder="Ecrivez votre commentaire sur ce post, veuillez restez respectueux et courtois."></textarea>
                             </div>
                         </div>
-                        <a class="btn btn-primary pull-right">Envoyer</a>
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
                     </div>
                 </form>
             {% else %}
