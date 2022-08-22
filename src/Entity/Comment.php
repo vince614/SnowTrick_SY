@@ -37,6 +37,11 @@ class Comment implements EntityInterface
      */
     private $created_at;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $valid;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,6 +91,18 @@ class Comment implements EntityInterface
     public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
+    }
+
+    public function isValid(): ?bool
+    {
+        return $this->valid;
+    }
+
+    public function setValid(bool $valid): self
+    {
+        $this->valid = $valid;
 
         return $this;
     }

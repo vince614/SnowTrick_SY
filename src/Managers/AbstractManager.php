@@ -25,7 +25,7 @@ abstract class AbstractManager {
      * @param EntityInterface $entity
      * @return void
      */
-    public function save(EntityInterface $entity)
+    public function save(EntityInterface $entity): void
     {
         $this->initialise($entity);
         $this->entityManager->persist($entity);
