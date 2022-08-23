@@ -3,13 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
-use App\Entity\Group;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
 use App\Repository\GroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Managers\FigureManager;
 use Exception;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +24,10 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class FigureController extends AbstractController
 {
+
+    /** @var int  */
+    const FIGURES_PER_PAGE = 12;
+
     /**
      * @Route("/", name="figure_index", methods={"GET"})
      * @param FigureRepository $figureRepository
@@ -84,13 +88,21 @@ class FigureController extends AbstractController
      * Figures list
      *
      * @Route("/figure/list", name="figure_list", methods={"GET"})
+     * @param Request $request
      * @param FigureRepository $figureRepository
+     * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function list(FigureRepository $figureRepository): Response
+    public function list(Request $request, FigureRepository $figureRepository, PaginatorInterface $paginator): Response
     {
+        $figures = $figureRepository->findBy([], ['created_at' => 'DESC']);
+        $figures = $paginator->paginate(
+            $figures,
+            $request->query->getInt('page', 1),
+            self::FIGURES_PER_PAGE
+        );
         return $this->render('figure/list.html.twig', [
-            'figures' => $figureRepository->findAll()
+            'figures' => $figures
         ]);
     }
 

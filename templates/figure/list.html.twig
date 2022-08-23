@@ -3,22 +3,30 @@
 {% block title %}Figure index{% endblock %}
 
 {% block body %}
-    <div class="card_container">
+    <div class="header d-flex" style="justify-content: center;">
+        <h1 class="title" style="text-transform: uppercase; font-weight: bolder;">Liste des figures</h1>
+    </div>
+    <div class="card_container" style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: center; width: 100%;">
         {% for figure in figures %}
-        <div class="card">
-            <div class="card-body">
-                <a href="{{ path('figure_show', {'slug': figure.slug}) }}"><h5 class="card-title ">{{ figure.name }}</h5></a>
-                <p class="card-text">
-                    {{ figure.description }}
-                </p>
-                <p class="card-text">
-                    <small class="text-muted">Post crée le {{ figure.createdAt|date("d/m/Y") }}</small>
-                </p>
+            <div class="card m-2" style="width: 18rem;">
+                <img src="{{ figure.imageUrl }}" class="card-img-top" alt="{{ figure.name }}"/>
+                <div class="card-body">
+                    <a href="{{ path('figure_show', {'slug': figure.slug}) }}"><h5 class="card-title ">{{ figure.name }}</h5></a>
+                    <p class="card-text">
+                        {{ figure.description|length > 300 ? figure.description|slice(0, 300) ~ '...' : figure.description }}
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">Post crée le {{ figure.createdAt|date("d/m/Y") }}</small>
+                    </p>
+                </div>
             </div>
-            <img src="{{ figure.imageUrl }}" class="card-img-bottom" alt="{{ figure.name }}"/>
-        </div>
         {% else %}
             <h2>No records found</h2>
         {% endfor %}
+    </div>
+    <br/>
+    <br/>
+    <div style="display: flex; align-items: center; justify-content: center;">
+        {{ knp_pagination_render(figures) }}
     </div>
 {% endblock %}
