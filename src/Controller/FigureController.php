@@ -48,6 +48,9 @@ class FigureController extends AbstractController
      */
     public function new(Request $request, FigureManager $figureManager): RedirectResponse|Response
     {
+        // Redirect if not logged
+        if (!$this->getUser()) return $this->redirectToRoute('figure_index');
+
         $figure = new Figure();
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
