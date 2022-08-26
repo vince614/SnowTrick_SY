@@ -21,8 +21,9 @@
     <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-    <div class="mb-3">
-        <a href="{{ path('app_register') }}">Vous n'avez pas de compte? Créez-en un !</a>
+    <div class="mb-3" style="flex-direction: column; display: flex;">
+        <a href="{{ path('app_register') }}">Vous n'avez pas de compte ? Créez-en un !</a>
+        <a href="{{ path('app_forgot_password_request') }}">Vous avez oublié votre mot de passe ?</a>
     </div>
 
     <button class="btn btn-lg btn-primary" type="submit">
