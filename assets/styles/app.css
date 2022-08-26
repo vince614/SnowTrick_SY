@@ -1,5 +1,5 @@
 @import "~bootstrap/dist/css/bootstrap.min.css";
-@import '~mdb-ui-kit/css/mdb.min.css';
+@import "~mdb-ui-kit/css/mdb.min.css";
 
 body {
     background-color: #d2d0d0;
@@ -114,4 +114,34 @@ body {
 
 .form-group textarea.form-input {
     height: 150px;
+}
+
+.anchorLink {
+    position: absolute;
+    bottom:20px;
+    right: 20px;
+    cursor: pointer;
+}
+
+.anchorLink a {
+    color: white;
+    font-size: 20px;
+}
+
+.anchorLink:hover a {
+    color: #878787;
+}
+
+.figureCardContainer {
+    flex-direction: row;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.pagination_container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
 }

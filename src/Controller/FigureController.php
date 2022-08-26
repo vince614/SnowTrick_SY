@@ -31,16 +31,23 @@ class FigureController extends AbstractController
     /**
      * @Route("/", name="figure_index", methods={"GET"})
      * @param FigureRepository $figureRepository
-     * @param GroupRepository $groupRepository
+     * @param Request $request
+     * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function index(FigureRepository $figureRepository, GroupRepository $groupRepository): Response
+    public function index(
+        FigureRepository $figureRepository,
+        Request $request,
+        PaginatorInterface $paginator
+    ): Response
     {
-        return $this->render('figure/index.html.twig', [
-            // Find all with limit
-            'figures' => $figureRepository->findBy([], ['created_at' => 'DESC'], 20),
-            'groups' => $groupRepository->findAll(),
-        ]);
+        $figures = $figureRepository->findAll();
+        $figures = $paginator->paginate(
+            $figures,
+            $request->query->getInt('page', 1),
+            15
+        );
+        return $this->render('figure/index.html.twig', ['figures' => $figures]);
     }
 
     /**
