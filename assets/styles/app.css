@@ -5,6 +5,10 @@ body {
     background-color: #d2d0d0;
 }
 
+a {
+    text-decoration: none;
+}
+
 .container {
     margin-top: 100px;
 }
@@ -118,9 +122,18 @@ body {
 
 .anchorLink {
     position: absolute;
-    bottom:20px;
+    bottom: 20px;
     right: 20px;
-    cursor: pointer;
+}
+
+.actions_container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 5px 10px;
+    border-radius: 10px;
+    flex-direction: row;
+    display: flex;
 }
 
 .anchorLink a {
@@ -128,7 +141,7 @@ body {
     font-size: 20px;
 }
 
-.anchorLink:hover a {
+.anchorLink:hover a, .actions_container a:hover {
     color: #878787;
 }
 
@@ -144,4 +157,63 @@ body {
     align-items: center;
     justify-content: center;
     margin-top: 50px;
+}
+
+.figureName {
+    background-color: rgba(0, 0, 0, .4);
+    text-transform: uppercase;
+    padding: 5px 15px;
+    border-radius: 10px;
+}
+
+.figureName h1 {
+    font-weight: bolder;
+}
+
+.gallery {
+    display: flex;
+    width: 100%;
+    height: 150px;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.gallery .item {
+    display: flex;
+    width: 250px;
+    height: 150px;
+    border-radius: 5px;
+    margin: 10px;
+    border: 2px solid rgba(0, 0, 0, .5);
+    overflow: hidden;
+}
+
+.item img, .item video {
+    width: 100%;
+    height: 100%;
+}
+
+.infos_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.infos_container div {
+    display: flex;
+    padding: 5px 15px;
+    background-color: #1266f1;
+    color: white;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+}
+
+.infos_container div span {
+    margin: 0 4px;
+    color: white;
+    font-weight: 400;
 }

@@ -82,12 +82,25 @@ class FigureController extends AbstractController
      *
      * @Route("/figure/show/{slug}", name="figure_show", methods={"GET"})
      * @param Figure $figure
+     * @param Request $request
+     * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function show(Figure $figure): Response
+    public function show(
+        Figure $figure,
+        Request $request,
+        PaginatorInterface $paginator
+    ): Response
     {
+        $comments = $figure->getComments();
+        $comments = $paginator->paginate(
+            $comments,
+            $request->query->getInt('page', 1),
+            5
+        );
         return $this->render('figure/show.html.twig', [
-            'figure' => $figure,
+            'figure'    => $figure,
+            'comments'  => $comments
         ]);
     }
 

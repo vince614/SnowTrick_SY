@@ -22,7 +22,7 @@ class AppFixtures extends Fixture
     /** @var int */
     const USERS_MAX_COUNT   = 50;
     const FIGURES_MAX_COUNT = 10;
-    const COMMENTS_MAX_COUNT = 5;
+    const COMMENTS_MAX_COUNT = 20;
     const GROUPS        =  ['Frabs', 'Rotations', 'Flips', 'Rotations désaxées', 'Slides', 'One foot tricks', 'Old school'];
 
     /** @var Generator  */
