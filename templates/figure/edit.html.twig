@@ -3,12 +3,12 @@
     <div class="p-5 text-center bg-image" style="background-image: url('{{ figure.imageUrl }}');height: 600px;">
         <div class="mask" style="background-color: rgba(0, 0, 0, .4);">
             <div class="d-flex justify-content-center align-items-center h-100">
-                <div class="text-white figureName">
+                <div style="cursor: pointer;" id="figure_name" class="text-white figureName">
                     <h1>{{ figure.name }}</h1>
                 </div>
             </div>
             <div class="actions_container">
-                <a class="btn btn-primary" href="{{ path('figure_edit', {'id': figure.id}) }}">
+                <a class="btn btn-primary" id="figure_image_url" href="#">
                     <i class="fas fa-edit"></i>
                 </a>
                 <form method="post" action="{{ path('figure_delete', {'id': figure.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
@@ -47,8 +47,8 @@
                     </option>
                 {% endfor %}
             </select>
-            <input type="hidden" name="figure[name]" value="{{ figure.name }}">
-            <input type="hidden" name="figure[imageUrl]" value="{{ figure.imageUrl }}">
+            <input type="hidden" id="figure_name_input" name="figure[name]" value="{{ figure.name }}">
+            <input type="hidden" id="figure_image_url_input" name="figure[imageUrl]" value="{{ figure.imageUrl }}">
             <input type="hidden" name="figure[_token]" value="{{ firgureForm._token.vars.value }}">
             <div class="manage_button_container">
                 <button class="btn btn-danger" type="submit">Supprimer</button>
@@ -75,7 +75,38 @@
 
 {% endblock %}
 {% block javascripts %}
-
+    <script>
+        // Update figure name
+        $('#figure_name').click(async () => {
+            const { value: figureName } = await Swal.fire({
+                title: 'Modifier le nom de la figure',
+                input: 'text',
+                inputLabel: 'Nom de la figure',
+                inputValue: '{{ figure.name }}',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Vous devez écrire quelque chose!'
+                    }
+                }
+            })
+            if (figureName) $('#figure_name_input').val(figureName);
+        });
+        // Update figure image url
+        $('#figure_image_url').click(async () => {
+            const { value: figureImage } = await Swal.fire({
+                title: "Modifier l'image de la figure",
+                input: 'textarea',
+                inputLabel: 'Url de la figure',
+                inputValue: '{{ figure.imageUrl }}',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) return 'Vous devez écrire quelque chose!';
+                }
+            });
+            if (figureImage) $('#figure_image_url_input').val(figureImage);
+        });
+    </script>
 {% endblock %}
 {% block title %}
     Edit - {{ figure.name }}
