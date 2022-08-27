@@ -286,4 +286,8 @@ RESPONSIVE
     .card {
         width: 95% !important;
     }
+
+    .gallery .item {
+        width: 200px;
+    }
 }
