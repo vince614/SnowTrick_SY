@@ -132,12 +132,17 @@ class FigureController extends AbstractController
      * @Route("/figure/edit/{id}", name="figure_edit", methods={"GET", "POST"})
      * @param Request $request
      * @param FigureManager $figureManager
+     * @param Figure $figure
+     * @param GroupRepository $groupRepository
      * @return Response
-     * @throws Exception
      */
-    public function edit(Request $request, FigureManager $figureManager): Response
+    public function edit(
+        Request $request,
+        FigureManager $figureManager,
+        Figure $figure,
+        GroupRepository $groupRepository
+    ): Response
     {
-        $figure = new Figure();
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
 
@@ -148,7 +153,8 @@ class FigureController extends AbstractController
 
         return $this->renderForm('figure/edit.html.twig', [
             'figure' => $figure,
-            'form' => $form,
+            'groups' => $groupRepository->findAll(),
+            'firgureForm' => $form,
         ]);
     }
 

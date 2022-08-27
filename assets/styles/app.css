@@ -183,7 +183,7 @@ a {
     width: 250px;
     height: 150px;
     border-radius: 5px;
-    margin: 10px;
+    margin: 20px 10px;
     border: 2px solid rgba(0, 0, 0, .5);
     overflow: hidden;
 }
@@ -238,7 +238,28 @@ a {
     font-weight: bolder;
 }
 
+.description {
+    display: flex;
+    width: 100%;
+    background-color: #d2d0d0;
+    min-height: 400px;
+    border: 2px solid rgba(0, 0, 0, .2);
+    border-radius: 5px;
+    text-align: left;
+}
 
+.manage_button_container {
+    display: flex;
+    width: 100%;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: row;
+    margin: 20px auto;
+}
+
+.manage_button_container button {
+    margin: 0 5px;
+}
 
 
 

@@ -23,15 +23,15 @@ class Image implements EntityInterface
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=4)
-     */
-    private $extension;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Figure::class, inversedBy="images")
      * @ORM\JoinColumn(nullable=false)
      */
     private $figure;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $url;
 
     public function getId(): ?int
     {
@@ -50,18 +50,6 @@ class Image implements EntityInterface
         return $this;
     }
 
-    public function getExtension(): ?string
-    {
-        return $this->extension;
-    }
-
-    public function setExtension(string $extension): self
-    {
-        $this->extension = $extension;
-
-        return $this;
-    }
-
     public function getFigure(): ?Figure
     {
         return $this->figure;
@@ -70,6 +58,18 @@ class Image implements EntityInterface
     public function setFigure(?Figure $figure): self
     {
         $this->figure = $figure;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string $url): self
+    {
+        $this->url = $url;
 
         return $this;
     }
