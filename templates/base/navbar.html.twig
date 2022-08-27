@@ -82,3 +82,21 @@
         </div>
     </div>
 </nav>
+
+<div class="reponsive_nav">
+    <a href="{{ path('figure_index') }}">
+        <i class="fas fa-home"></i>
+    </a>
+    <a href="{{ path('figure_list') }}">
+        <i class="fas fa-list"></i>
+    </a>
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        <a href="{{ path('app_logout') }}">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </a>
+    {% else %}
+        <a href="{{ path('app_login') }}">
+            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+        </a>
+    {% endif %}
+</div>

@@ -173,9 +173,9 @@ a {
 .gallery {
     display: flex;
     width: 100%;
-    height: 150px;
     justify-content: center;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .gallery .item {
@@ -198,6 +198,7 @@ a {
     justify-content: center;
     align-items: center;
     flex-direction: row;
+    flex-wrap: wrap;
 }
 
 .infos_container div {
@@ -216,4 +217,52 @@ a {
     margin: 0 4px;
     color: white;
     font-weight: 400;
+}
+
+.reponsive_nav {
+    display: none;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    background-color: #4f4f4f;
+    height: 80px;
+    z-index: 10;
+}
+
+.reponsive_nav a {
+    color: white;
+    font-size: 25px;
+    font-weight: bolder;
+}
+
+
+
+
+
+
+
+/**
+RESPONSIVE
+ */
+
+@media screen and (max-width: 800px) {
+    .reponsive_nav {
+        display: flex;
+    }
+
+    .be-ava-comment, .be-img-comment {
+        width: 40px;
+        height: 40px;
+    }
+
+    .be-comment-block {
+        padding: 0;
+    }
+
+    .card {
+        width: 95% !important;
+    }
 }
