@@ -10,30 +10,41 @@
                 <div class="text-white">
                     <h1 class="mb-3">SnowTrick</h1>
                     <h4 class="mb-3">Découvrez les meilleurs figure de snowboard sur notre site.</h4>
-                    <a class="btn btn-outline-light btn-lg" href="#groups" role="button">Cétégorie de figure</a>
+                    <a class="btn btn-outline-light btn-lg" href="{{ path('figure_list') }}" role="button">Voir les figures</a>
                 </div>
+            </div>
+            <div class="anchorLink">
+                <a href="#figures">
+                    <i class="fas fa-chevron-down"></i>
+                </a>
             </div>
         </div>
     </div>
     <!-- Background image -->
 {% endblock %}
 {% block body %}
-    <div class="card_container flex-row" style="flex-direction: row!important; display: flex; flex-wrap: wrap; justify-content: space-around;">
+    <div class="card_container figureCardContainer" id="figures">
         {% for figure in figures %}
-            <div class="card" style="width: 18rem; margin: 5px;">
+            <div class="card" style="width: 15rem; margin: 5px;">
                 <img class="card-img-top" src="{{ figure.imageUrl }}" alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title">{{ figure.name }}</h5>
+                    <a href="{{ path('figure_show', {'slug': figure.slug}) }}">
+                        <h5 class="card-title">{{ figure.name|length > 17 ? figure.name|slice(0, 17) ~ '...' : figure.name }}</h5>
+                    </a>
                     <span class="card-text" style="color: #7b7a7a;"><small>Post crée le {{ figure.createdAt|date("d/m/Y") }}</small></span>
-                    <p class="card-text">{{ figure.description|length > 100 ? figure.description|slice(0, 100) ~ '...' : figure.description }}</p>
                     <div class="btn-group">
-                        <a href="{{ path('figure_show', {'slug': figure.slug}) }}" class="btn btn-primary">Voir</a>
-                        <a href="#" class="btn btn-danger">Editer</a>
+                        <a title="Editer la figure" href="{{ path('figure_edit', {'id': figure.id}) }}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a title="Supprimer la figure" href="{{ path('figure_delete', {'id': figure.id}) }}" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
-    <hr>
-    <a class="btn btn-success" href="{{ path('figure_new') }}">Create new figure</a>
+    <div class="pagination_container">
+        {{ knp_pagination_render(figures) }}
+    </div>
 {% endblock %}

@@ -1,18 +1,48 @@
 {% extends 'base.html.twig' %}
-{% block body %}
-    <div class="card mb-3" style="background-color: unset; box-shadow: none;">
-        <div class="row g-0 d-flex align-items-center">
-            <div class="col-lg-6 col-xl-4 d-none d-lg-flex"><img
-                        src="{{ figure.imageUrl }}" alt="Trendy Pants and Shoes"
-                        class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5"></div>
-            <div class="col-lg-6 col-xl-8">
-                <div class="card-body px-4 py-5 px-md-5"><h2 class="fw-bold">{{ figure.name }}</h2>
-                    <p class="text-uppercase text-danger fw-bold mb-3"><i class="fas fa-clock me-2"></i><span>{{ figure.createdAt.format('Y-m-d H:i:s') }}</span></p>
-                    <p class="text-muted mb-4">{{ figure.description }}</p>
+{% block header %}
+    <div class="p-5 text-center bg-image" style="background-image: url('{{ figure.imageUrl }}');height: 600px;">
+        <div class="mask" style="background-color: rgba(0, 0, 0, .4);">
+            <div class="d-flex justify-content-center align-items-center h-100">
+                <div class="text-white figureName">
+                    <h1>{{ figure.name }}</h1>
                 </div>
+            </div>
+            <div class="actions_container">
+                <a class="btn btn-primary" href="{{ path('figure_edit', {'id': figure.id}) }}">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <form method="post" action="{{ path('figure_delete', {'id': figure.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ figure.id) }}">
+                    <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                </form>
             </div>
         </div>
     </div>
+    <div class="gallery">
+        {% for image in figure.images %}
+            <div class="item">
+                <img alt="{{ image.name }}" src="{{ image.url }}">
+            </div>
+        {% endfor %}
+        {% for video in figure.videos %}
+            <div class="item">
+                <iframe src="{{ video.url }}" frameborder="0" allowfullscreen></iframe>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+{% block body %}
+
+    <div class="container">
+        {{ figure.description }}
+        <br/>
+        <div class="infos_container">
+            <div class="text-info">Identifiant <span>{{ figure.id }}</span></div>
+            <div class="text-info">Nom du groupe <span>{{ figure.group.name }}</span></div>
+            <div class="text-info">Date de création <span>{{ figure.createdAt|date("d/m/Y") }}</span></div>
+        </div>
+    </div>
+
     {% if is_granted('ROLE_ADMIN') %}
         <div class="d-inline-flex">
             <a class="btn btn-primary mx-2" href="{{ path('figure_edit', {'id': figure.id}) }}">Edit</a>
@@ -27,7 +57,7 @@
         <div class="be-comment-block">
             <h1 class="comments-title">Comment{{ figure.comments.count > 0 ? 's' : '' }} ({{ figure.comments.count }})</h1>
 
-            {% for comment in figure.comments %}
+            {% for comment in comments %}
                 <div class="be-comment">
                     <div class="be-img-comment">
                         <a href="{{ path('user_profile', {'id': comment.user.id }) }}">
@@ -49,6 +79,9 @@
                     </div>
                 </div>
             {% endfor %}
+            <div class="pagination_container">
+                {{ knp_pagination_render(comments) }}
+            </div>
             <hr/>
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <h3>Ecrire un commentaire</h3>

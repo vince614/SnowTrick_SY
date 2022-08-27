@@ -31,16 +31,23 @@ class FigureController extends AbstractController
     /**
      * @Route("/", name="figure_index", methods={"GET"})
      * @param FigureRepository $figureRepository
-     * @param GroupRepository $groupRepository
+     * @param Request $request
+     * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function index(FigureRepository $figureRepository, GroupRepository $groupRepository): Response
+    public function index(
+        FigureRepository $figureRepository,
+        Request $request,
+        PaginatorInterface $paginator
+    ): Response
     {
-        return $this->render('figure/index.html.twig', [
-            // Find all with limit
-            'figures' => $figureRepository->findBy([], ['created_at' => 'DESC'], 20),
-            'groups' => $groupRepository->findAll(),
-        ]);
+        $figures = $figureRepository->findAll();
+        $figures = $paginator->paginate(
+            $figures,
+            $request->query->getInt('page', 1),
+            15
+        );
+        return $this->render('figure/index.html.twig', ['figures' => $figures]);
     }
 
     /**
@@ -75,12 +82,25 @@ class FigureController extends AbstractController
      *
      * @Route("/figure/show/{slug}", name="figure_show", methods={"GET"})
      * @param Figure $figure
+     * @param Request $request
+     * @param PaginatorInterface $paginator
      * @return Response
      */
-    public function show(Figure $figure): Response
+    public function show(
+        Figure $figure,
+        Request $request,
+        PaginatorInterface $paginator
+    ): Response
     {
+        $comments = $figure->getComments();
+        $comments = $paginator->paginate(
+            $comments,
+            $request->query->getInt('page', 1),
+            5
+        );
         return $this->render('figure/show.html.twig', [
-            'figure' => $figure,
+            'figure'    => $figure,
+            'comments'  => $comments
         ]);
     }
 
@@ -112,12 +132,17 @@ class FigureController extends AbstractController
      * @Route("/figure/edit/{id}", name="figure_edit", methods={"GET", "POST"})
      * @param Request $request
      * @param FigureManager $figureManager
+     * @param Figure $figure
+     * @param GroupRepository $groupRepository
      * @return Response
-     * @throws Exception
      */
-    public function edit(Request $request, FigureManager $figureManager): Response
+    public function edit(
+        Request $request,
+        FigureManager $figureManager,
+        Figure $figure,
+        GroupRepository $groupRepository
+    ): Response
     {
-        $figure = new Figure();
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
 
@@ -128,7 +153,8 @@ class FigureController extends AbstractController
 
         return $this->renderForm('figure/edit.html.twig', [
             'figure' => $figure,
-            'form' => $form,
+            'groups' => $groupRepository->findAll(),
+            'firgureForm' => $form,
         ]);
     }
 

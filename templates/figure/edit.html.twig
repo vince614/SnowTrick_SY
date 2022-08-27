@@ -1,13 +1,111 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Edit Figure{% endblock %}
-
-{% block body %}
-    <h1>Edit Figure</h1>
-
-    {{ include('figure/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a href="{{ path('figure_index') }}">back to list</a>
-
-    {{ include('figure/_delete_form.html.twig') }}
+{% block header %}
+    <div class="p-5 text-center bg-image" style="background-image: url('{{ figure.imageUrl }}');height: 600px;">
+        <div class="mask" style="background-color: rgba(0, 0, 0, .4);">
+            <div class="d-flex justify-content-center align-items-center h-100">
+                <div style="cursor: pointer;" id="figure_name" class="text-white figureName">
+                    <h1>{{ figure.name }}</h1>
+                </div>
+            </div>
+            <div class="actions_container">
+                <a class="btn btn-primary" id="figure_image_url" href="#">
+                    <i class="fas fa-edit"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="gallery">
+        {% for image in figure.images %}
+            <div class="item">
+                <img alt="{{ image.name }}" src="{{ image.url }}">
+            </div>
+        {% endfor %}
+        {% for video in figure.videos %}
+            <div class="item">
+                <iframe src="{{ video.url }}" frameborder="0" allowfullscreen></iframe>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}
+{% block body %}
+
+    <div class="container">
+        <form method="post" name="figure">
+            <label for="description">Description</label>
+            <textarea name="figure[description]" id="description" class="description">
+                {{ figure.description }}
+            </textarea>
+            <label for="figure_group">Groupe</label>
+            <select name="figure[group]" id="figure_group" class="form-select">
+                <option></option>
+                {% for group in groups %}
+                    <option value="{{ group.id }}" {{ (group.id == figure.group.id ? 'selected' : '') }}>
+                        {{group.name }}
+                    </option>
+                {% endfor %}
+            </select>
+            <input type="hidden" id="figure_name_input" name="figure[name]" value="{{ figure.name }}">
+            <input type="hidden" id="figure_image_url_input" name="figure[imageUrl]" value="{{ figure.imageUrl }}">
+            <input type="hidden" name="figure[_token]" value="{{ firgureForm._token.vars.value }}">
+            <div class="manage_button_container">
+                <button class="btn btn-danger" type="submit">Supprimer</button>
+                <button class="btn btn-primary" type="submit">Sauvegarder</button>
+            </div>
+        </form>
+        <br/>
+        <div class="infos_container">
+            <div class="text-info">Identifiant <span>{{ figure.id }}</span></div>
+            <div class="text-info">Nom du groupe <span>{{ figure.group.name }}</span></div>
+            <div class="text-info">Date de création <span>{{ figure.createdAt|date("d/m/Y") }}</span></div>
+        </div>
+    </div>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="d-inline-flex">
+            <a class="btn btn-primary mx-2" href="{{ path('figure_edit', {'id': figure.id}) }}">Edit</a>
+            <form method="post" action="{{ path('figure_delete', {'id': figure.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ figure.id) }}">
+                <button class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    {% endif %}
+
+{% endblock %}
+{% block javascripts %}
+    <script>
+        // Update figure name
+        $('#figure_name').click(async () => {
+            const { value: figureName } = await Swal.fire({
+                title: 'Modifier le nom de la figure',
+                input: 'text',
+                inputLabel: 'Nom de la figure',
+                inputValue: '{{ figure.name }}',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) {
+                        return 'Vous devez écrire quelque chose!'
+                    }
+                }
+            })
+            if (figureName) $('#figure_name_input').val(figureName);
+        });
+        // Update figure image url
+        $('#figure_image_url').click(async () => {
+            const { value: figureImage } = await Swal.fire({
+                title: "Modifier l'image de la figure",
+                input: 'textarea',
+                inputLabel: 'Url de la figure',
+                inputValue: '{{ figure.imageUrl }}',
+                showCancelButton: true,
+                inputValidator: (value) => {
+                    if (!value) return 'Vous devez écrire quelque chose!';
+                }
+            });
+            if (figureImage) $('#figure_image_url_input').val(figureImage);
+        });
+    </script>
+{% endblock %}
+{% block title %}
+    Edit - {{ figure.name }}
+{% endblock %}
+
