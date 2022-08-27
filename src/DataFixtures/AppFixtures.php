@@ -5,7 +5,9 @@ namespace App\DataFixtures;
 use App\Entity\Comment;
 use App\Entity\Figure;
 use App\Entity\Group;
+use App\Entity\Image;
 use App\Entity\User;
+use App\Entity\Video;
 use App\Managers\CommentManager;
 use App\Managers\FigureManager;
 use App\Managers\GroupManager;
@@ -19,10 +21,22 @@ use Faker\Generator;
 
 class AppFixtures extends Fixture
 {
-    /** @var int */
+    /**
+     * User options
+     */
     const USERS_MAX_COUNT   = 50;
+
+    /**
+     * Figures options
+     */
     const FIGURES_MAX_COUNT = 10;
+    const IMAGES_MAX_COUNT = 5;
+    const VIDEOS_MAX_COUNT = 1;
     const COMMENTS_MAX_COUNT = 20;
+
+    /**
+     * Groups options
+     */
     const GROUPS        =  ['Frabs', 'Rotations', 'Flips', 'Rotations désaxées', 'Slides', 'One foot tricks', 'Old school'];
 
     /** @var Generator  */
@@ -71,6 +85,8 @@ class AppFixtures extends Fixture
 
     private UserRepository $_userRepository;
 
+    private ObjectManager $_manager;
+
     /**
      * Injections of require dependencies
      *
@@ -102,7 +118,7 @@ class AppFixtures extends Fixture
      */
     public function load(ObjectManager $manager)
     {
-        $_manager = $manager;
+        $this->_manager = $manager;
         $this->_faker = Factory::create('fr_FR');
 
         // Creates entities
@@ -111,7 +127,7 @@ class AppFixtures extends Fixture
         $this->_createFigures();
 
         // Flush
-        $_manager->flush();
+        $this->_manager->flush();
     }
 
     /**
@@ -122,7 +138,7 @@ class AppFixtures extends Fixture
      */
     private function _createUsers(): void
     {
-        $userCount = random_int(1, self::USERS_MAX_COUNT);
+        $userCount = random_int(25, self::USERS_MAX_COUNT);
         $this->log("Create $userCount users");
         for ($i = 0; $i < $userCount; $i++) {
             $user = new User();
@@ -176,6 +192,35 @@ class AppFixtures extends Fixture
 
                 $this->_figureManager->save($figure);
 
+                // Create images
+                $imagesCount = random_int(1, self::IMAGES_MAX_COUNT);
+                $this->log("Create $imagesCount images", 'yellow');
+                for ($i = 0; $i < $imagesCount; $i++) {
+                    $image = new Image();
+                    $randomImageLink = $this->retrieveRedirectUrl('https://picsum.photos/500/300');
+                    $image
+                        ->setName($this->_faker->name)
+                        ->setUrl($randomImageLink)
+                        ->setFigure($figure);
+                    $this->_manager->persist($image);
+                    $this->_manager->flush();
+                    $figure->addImage($image);
+                }
+
+                // Create videos
+                $videoCount = random_int(1, self::VIDEOS_MAX_COUNT);
+                $this->log("Create $videoCount videos", 'yellow');
+                for ($i = 0; $i < $videoCount; $i++) {
+                    $video = new Video();
+                    $video
+                        ->setName($this->_faker->name)
+                        ->setUrl('https://www.youtube.com/embed/tgbNymZ7vqY')
+                        ->setFigure($figure);
+                    $this->_manager->persist($video);
+                    $this->_manager->flush();
+                    $figure->addVideo($video);
+                }
+
                 // Create comments
                 $commentCount = random_int(2, self::COMMENTS_MAX_COUNT);
                 $this->log("Create $commentCount comments", 'yellow');
@@ -186,7 +231,6 @@ class AppFixtures extends Fixture
                         ->setUser($user)
                         ->setComment($this->_faker->realText(500));
                     $this->_commentManager->save($comment);
-                    // Add comment into figure
                     $figure->addComment($comment);
                 }
                 $this->_figureManager->save($figure);

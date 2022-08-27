@@ -188,7 +188,7 @@ a {
     overflow: hidden;
 }
 
-.item img, .item video {
+.item img, .item iframe {
     width: 100%;
     height: 100%;
 }
