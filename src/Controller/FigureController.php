@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Managers\FigureManager;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,6 +30,8 @@ class FigureController extends AbstractController
     const FIGURES_PER_PAGE = 12;
 
     /**
+     * Index page
+     *
      * @Route("/", name="figure_index", methods={"GET"})
      * @param FigureRepository $figureRepository
      * @param Request $request
@@ -51,7 +54,10 @@ class FigureController extends AbstractController
     }
 
     /**
+     * Create new figure
+     *
      * @Route("/figure/new", name="figure_new", methods={"GET", "POST"})
+     * @IsGranted("ROLE_ADMIN")
      * @param Request $request
      * @param FigureManager $figureManager
      * @return RedirectResponse|Response
@@ -78,7 +84,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * Show figure card
+     * Show figure informations
      *
      * @Route("/figure/show/{slug}", name="figure_show", methods={"GET"})
      * @param Figure $figure
@@ -130,6 +136,7 @@ class FigureController extends AbstractController
      * Edit figure
      *
      * @Route("/figure/edit/{id}", name="figure_edit", methods={"GET", "POST"})
+     * @IsGranted("ROLE_ADMIN")
      * @param Request $request
      * @param FigureManager $figureManager
      * @param Figure $figure
@@ -162,6 +169,7 @@ class FigureController extends AbstractController
      * Delete figure
      *
      * @Route("/figure/delete/{id}", name="figure_delete", methods={"POST","GET"})
+     * @IsGranted("ROLE_ADMIN")
      * @param Request $request
      * @param Figure $figure
      * @param EntityManagerInterface $entityManager

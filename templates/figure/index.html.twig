@@ -32,14 +32,16 @@
                         <h5 class="card-title">{{ figure.name|length > 17 ? figure.name|slice(0, 17) ~ '...' : figure.name }}</h5>
                     </a>
                     <span class="card-text" style="color: #7b7a7a;"><small>Post crée le {{ figure.createdAt|date("d/m/Y") }}</small></span>
-                    <div class="btn-group">
-                        <a title="Editer la figure" href="{{ path('figure_edit', {'id': figure.id}) }}" class="btn btn-primary">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a title="Supprimer la figure" href="{{ path('figure_delete', {'id': figure.id}) }}" class="btn btn-danger">
-                            <i class="fas fa-trash"></i>
-                        </a>
-                    </div>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <div class="btn-group">
+                            <a title="Editer la figure" href="{{ path('figure_edit', {'id': figure.id}) }}" class="btn btn-primary">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a title="Supprimer la figure" href="{{ path('figure_delete', {'id': figure.id}) }}" class="btn btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

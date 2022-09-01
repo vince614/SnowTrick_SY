@@ -13,6 +13,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,18 +27,8 @@ class UserController extends AbstractController
 {
 
     /**
-     * @Route("/user/{id}", name="user_show", methods={"GET"})
-     * @param User $user
-     * @return Response
-     */
-    public function show(User $user): Response
-    {
-        return $this->render('user/show.html.twig', [
-            'user' => $user,
-        ]);
-    }
-
-    /**
+     * Show profile
+     *
      * @Route("/profile/{id}", name="user_profile", methods={"GET"})
      * @param User $user
      * @return Response
@@ -50,6 +41,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * Edit user
+     *
      * @Route("/{id}/edit", name="user_edit", methods={"GET", "POST"})
      * @param Request $request
      * @param User $user
@@ -99,6 +92,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * Delete user
+     *
      * @Route("/{id}", name="user_delete", methods={"POST"})
      * @param Request $request
      * @param User $user

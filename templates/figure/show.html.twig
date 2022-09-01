@@ -7,15 +7,17 @@
                     <h1>{{ figure.name }}</h1>
                 </div>
             </div>
-            <div class="actions_container">
-                <a class="btn btn-primary" href="{{ path('figure_edit', {'id': figure.id}) }}">
-                    <i class="fas fa-edit"></i>
-                </a>
-                <form method="post" action="{{ path('figure_delete', {'id': figure.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ figure.id) }}">
-                    <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
-                </form>
-            </div>
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="actions_container">
+                    <a class="btn btn-primary" href="{{ path('figure_edit', {'id': figure.id}) }}">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <form method="post" action="{{ path('figure_delete', {'id': figure.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ figure.id) }}">
+                        <button class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                    </form>
+                </div>
+            {% endif %}
         </div>
     </div>
     <div class="gallery">
