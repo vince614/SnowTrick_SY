@@ -17,14 +17,29 @@
     <div class="gallery">
         {% for image in figure.images %}
             <div class="item">
-                <img alt="{{ image.name }}" src="{{ image.url }}">
+                <div class="delete bg-danger" tooltip="Editer">
+                    <i class="fas fa-trash"></i>
+                </div>
+                <div class="edit bg-primary" tooltip="Supprimer">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <img style="filter: brightness(.5);" alt="{{ image.name }}" src="{{ image.url }}">
             </div>
         {% endfor %}
         {% for video in figure.videos %}
             <div class="item">
-                <iframe src="{{ video.url }}" frameborder="0" allowfullscreen></iframe>
+                <div class="delete bg-danger" tooltip="Editer">
+                    <i class="fas fa-trash"></i>
+                </div>
+                <div class="edit bg-primary" tooltip="Supprimer">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <iframe style="filter: brightness(.5);" src="{{ video.url }}" frameborder="0" allowfullscreen></iframe>
             </div>
         {% endfor %}
+        <div class="item add" tooltip="Ajouter une nouvelle image">
+            <i class="fas fa-add"></i>
+        </div>
     </div>
 {% endblock %}
 {% block body %}
@@ -32,9 +47,7 @@
     <div class="container">
         <form method="post" name="figure">
             <label for="description">Description</label>
-            <textarea name="figure[description]" id="description" class="description">
-                {{ figure.description }}
-            </textarea>
+            <textarea name="figure[description]" id="description" class="description">{{ figure.description }}</textarea>
             <label for="figure_group">Groupe</label>
             <select name="figure[group]" id="figure_group" class="form-select">
                 <option></option>
