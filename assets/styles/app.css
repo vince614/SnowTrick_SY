@@ -136,6 +136,10 @@ a {
     display: flex;
 }
 
+.actions_container a {
+    margin: 0 10px;
+}
+
 .anchorLink a {
     color: white;
     font-size: 20px;
@@ -184,13 +188,57 @@ a {
     height: 150px;
     border-radius: 5px;
     margin: 20px 10px;
-    border: 2px solid rgba(0, 0, 0, .5);
-    overflow: hidden;
+    border: 4px solid rgba(0, 0, 0, .5);
+    position: relative;
+    padding: 0;
+}
+
+.item .delete, .item .edit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    top: 5px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+    z-index: 5;
+}
+
+.item .delete {
+    right: 5px;
+}
+
+.item .edit {
+    right: 40px;
+}
+
+.item .delete:hover {
+    background-color: rgba(249, 49, 84, .8);
+}
+
+.item .edit:hover {
+    background-color: rgba(18, 102, 241, .8) !important;
 }
 
 .item img, .item iframe {
     width: 100%;
     height: 100%;
+    border-radius: 5px;
+}
+
+.add {
+    font-size: 40px;
+    font-weight: bolder;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: white;
 }
 
 .infos_container {
