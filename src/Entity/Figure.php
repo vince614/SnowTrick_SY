@@ -71,6 +71,11 @@ class Figure implements EntityInterface
      */
     private $image_url;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="figures")
+     */
+    private $author;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
@@ -324,6 +329,18 @@ class Figure implements EntityInterface
     public function setImageUrl(string $image_url): self
     {
         $this->image_url = $image_url;
+
+        return $this;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
         return $this;
     }

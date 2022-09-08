@@ -32,7 +32,7 @@
                         <h5 class="card-title">{{ figure.name|length > 17 ? figure.name|slice(0, 17) ~ '...' : figure.name }}</h5>
                     </a>
                     <span class="card-text" style="color: #7b7a7a;"><small>Post crée le {{ figure.createdAt|date("d/m/Y") }}</small></span>
-                    {% if is_granted('ROLE_ADMIN') %}
+                    {% if is_granted('FIGURE_DELETE', figure) %}
                         <div class="btn-group">
                             <a title="Editer la figure" href="{{ path('figure_edit', {'id': figure.id}) }}" class="btn btn-primary">
                                 <i class="fas fa-edit"></i>

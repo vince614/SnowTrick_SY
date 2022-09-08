@@ -225,10 +225,12 @@ class AppFixtures extends Fixture
             for ($x = 0; $x < $figureCount; $x++) {
                 $figure = new Figure();
                 $randomImageLink = $this->retrieveRedirectUrl('https://picsum.photos/500/300');
+                $adminUser = $this->_userRepository->findOneBy(['email' => 'vince@gmail.com']);
                 $figure
                     ->setDescription($this->_faker->realText(2000))
                     ->setImageUrl($randomImageLink)
                     ->setName($this->_faker->name)
+                    ->setAuthor($adminUser)
                     ->setGroup($group);
                 $this->log("Figure " . $this->_faker->name . " was created", 'green');
 

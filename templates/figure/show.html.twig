@@ -7,7 +7,7 @@
                     <h1>{{ figure.name }}</h1>
                 </div>
             </div>
-            {% if is_granted('ROLE_ADMIN') %}
+            {% if is_granted('FIGURE_DELETE', figure) %}
                 <div class="actions_container">
                     <a class="btn btn-primary" href="{{ path('figure_edit', {'id': figure.id}) }}">
                         <i class="fas fa-edit"></i>
@@ -44,16 +44,6 @@
             <div class="text-info">Date de création <span>{{ figure.createdAt|date("d/m/Y") }}</span></div>
         </div>
     </div>
-
-    {% if is_granted('ROLE_ADMIN') %}
-        <div class="d-inline-flex">
-            <a class="btn btn-primary mx-2" href="{{ path('figure_edit', {'id': figure.id}) }}">Edit</a>
-            <form method="post" action="{{ path('figure_delete', {'id': figure.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');">
-                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ figure.id) }}">
-                <button class="btn btn-danger">Delete</button>
-            </form>
-        </div>
-    {% endif %}
 
     <div class="container">
         <div class="be-comment-block">
