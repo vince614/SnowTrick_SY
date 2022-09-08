@@ -15,10 +15,12 @@ use Exception;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * Class FigureController
@@ -63,10 +65,14 @@ class FigureController extends AbstractController
      * @IsGranted("ROLE_ADMIN")
      * @param Request $request
      * @param FigureManager $figureManager
+     * @param SluggerInterface $slugger
      * @return RedirectResponse|Response
-     * @throws Exception
      */
-    public function new(Request $request, FigureManager $figureManager): RedirectResponse|Response
+    public function new(
+        Request $request,
+        FigureManager $figureManager,
+        SluggerInterface $slugger
+    ): RedirectResponse|Response
     {
         // Redirect if not logged
         if (!$this->getUser()) return $this->redirectToRoute('figure_index');
@@ -76,6 +82,12 @@ class FigureController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $figureImage = $form->get('image')->getData();
+            $figureImageDirectorty = $this->getParameter('images_directory');
+            if ($figureImage) {
+                $newFilename = $figureManager->uploadImage($figureImage, $figureImageDirectorty);
+                $figure->setImageUrl($newFilename);
+            }
             $figure->setAuthor($this->getUser());
             $figureManager->save($figure);
             return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
@@ -157,6 +169,12 @@ class FigureController extends AbstractController
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $figureImage = $form->get('image')->getData();
+            $figureImageDirectorty = $this->getParameter('images_directory');
+            if ($figureImage) {
+                $newFilename = $figureManager->uploadImage($figureImage, $figureImageDirectorty);
+                $figure->setImageUrl($newFilename);
+            }
             $figureManager->save($figure);
             return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
         }

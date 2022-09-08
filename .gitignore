@@ -20,3 +20,5 @@ yarn-error.log
 ###< PhpStorm ignore config ###
 .idea
 
+###< Custom ignore files and folders  ###
+public/uploads/
