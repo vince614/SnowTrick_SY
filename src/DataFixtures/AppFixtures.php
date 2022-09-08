@@ -13,6 +13,7 @@ use App\Managers\FigureManager;
 use App\Managers\GroupManager;
 use App\Managers\UserManager;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
@@ -29,7 +30,7 @@ class AppFixtures extends Fixture
     /**
      * Figures options
      */
-    const FIGURES_MAX_COUNT = 10;
+    const FIGURES_MAX_COUNT = 5;
     const IMAGES_MAX_COUNT = 5;
     const VIDEOS_MAX_COUNT = 1;
     const COMMENTS_MAX_COUNT = 20;
@@ -42,7 +43,7 @@ class AppFixtures extends Fixture
     /** @var Generator  */
     private Generator $_faker;
 
-    /** @var array  */
+    /** @var Group[]  */
     private array $_groups = [];
 
     /** @var array  */
@@ -87,6 +88,11 @@ class AppFixtures extends Fixture
 
     private ObjectManager $_manager;
 
+    private int $_userCount = 0;
+    private int $_figureCount = 0;
+    private int $_commentCount = 0;
+    private int $_groupCount = 0;
+
     /**
      * Injections of require dependencies
      *
@@ -122,12 +128,46 @@ class AppFixtures extends Fixture
         $this->_faker = Factory::create('fr_FR');
 
         // Creates entities
+        $this->_createAdminUser();
         $this->_createUsers();
         $this->_createGroups();
         $this->_createFigures();
 
+        $this->log(PHP_EOL . 'Fixtures was loaded');
+        $this->log("$this->_userCount Users", 'green');
+        $this->log("$this->_figureCount Figures", 'green');
+        $this->log("$this->_commentCount Comments", 'green');
+        $this->log("$this->_groupCount Groups", 'green');
+
         // Flush
         $this->_manager->flush();
+    }
+
+    /**
+     * Create admin user
+     *
+     * @return void
+     */
+    private function _createAdminUser(): void
+    {
+        $currentTime = new DateTimeImmutable();
+        $randomAvatar = $this->retrieveRedirectUrl('https://picsum.photos/300/300');
+        $user = new User();
+        $user
+            ->setUsername("Vince")
+            ->setEmail("vince@gmail.com")
+            ->setPassword("4f6asLQ8BN!o9BpM")
+            ->setTokenCreatedAt($currentTime)
+            ->setCreatedAt($currentTime)
+            ->setRoles([$this->_userManager::ROLE_ADMIN])
+            ->setActived(true)
+            ->setAvatarUrl($randomAvatar)
+            ->setToken("token_admin");
+        $this->log('Admin Vince was created', 'green');
+        $this->_userManager->encodePassword($user);
+        $this->_manager->persist($user);
+        $this->_manager->flush();
+        $this->_userCount++;
     }
 
     /**
@@ -149,6 +189,7 @@ class AppFixtures extends Fixture
             $this->log('User ' . $this->_faker->userName. ' was created', 'green');
             $this->_users[] = $user->getEmail();
             $this->_userManager->save($user);
+            $this->_userCount++;
         }
     }
 
@@ -166,6 +207,7 @@ class AppFixtures extends Fixture
             $this->_groups[] = $group;
             $this->log("Group $groupName was created", 'green');
             $this->_groupManager->save($group);
+            $this->_groupCount++;
         }
     }
 
@@ -177,20 +219,23 @@ class AppFixtures extends Fixture
      */
     private function _createFigures(): void
     {
-        $figureCount = random_int(1, self::FIGURES_MAX_COUNT);
-        $this->log("Create $figureCount figures");
         foreach ($this->_groups as $group) {
-            for ($i = 0; $i < $figureCount; $i++) {
+            $figureCount = random_int(1, self::FIGURES_MAX_COUNT);
+            $this->log("Create $figureCount figures in group " . $group->getName());
+            for ($x = 0; $x < $figureCount; $x++) {
                 $figure = new Figure();
                 $randomImageLink = $this->retrieveRedirectUrl('https://picsum.photos/500/300');
+                $adminUser = $this->_userRepository->findOneBy(['email' => 'vince@gmail.com']);
                 $figure
                     ->setDescription($this->_faker->realText(2000))
                     ->setImageUrl($randomImageLink)
                     ->setName($this->_faker->name)
+                    ->setAuthor($adminUser)
                     ->setGroup($group);
                 $this->log("Figure " . $this->_faker->name . " was created", 'green');
 
                 $this->_figureManager->save($figure);
+                $this->_figureCount++;
 
                 // Create images
                 $imagesCount = random_int(1, self::IMAGES_MAX_COUNT);
@@ -232,6 +277,7 @@ class AppFixtures extends Fixture
                         ->setComment($this->_faker->realText(500));
                     $this->_commentManager->save($comment);
                     $figure->addComment($comment);
+                    $this->_commentCount++;
                 }
                 $this->_figureManager->save($figure);
             }

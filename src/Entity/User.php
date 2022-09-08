@@ -73,9 +73,15 @@ class User implements UserInterface, Serializable, EntityInterface, PasswordAuth
      */
     private $avatarUrl;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="author")
+     */
+    private $figures;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->figures = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -257,6 +263,36 @@ class User implements UserInterface, Serializable, EntityInterface, PasswordAuth
     public function setAvatarUrl(string $avatarUrl): self
     {
         $this->avatarUrl = $avatarUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Figure>
+     */
+    public function getFigures(): Collection
+    {
+        return $this->figures;
+    }
+
+    public function addFigure(Figure $figure): self
+    {
+        if (!$this->figures->contains($figure)) {
+            $this->figures[] = $figure;
+            $figure->setAuthor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFigure(Figure $figure): self
+    {
+        if ($this->figures->removeElement($figure)) {
+            // set the owning side to null (unless already changed)
+            if ($figure->getAuthor() === $this) {
+                $figure->setAuthor(null);
+            }
+        }
 
         return $this;
     }

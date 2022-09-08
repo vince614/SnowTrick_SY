@@ -3,13 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Entity\Image;
+use App\Entity\Video;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
 use App\Repository\GroupRepository;
+use App\Security\Voter\FigureVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Managers\FigureManager;
 use Exception;
 use Knp\Component\Pager\PaginatorInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,6 +33,8 @@ class FigureController extends AbstractController
     const FIGURES_PER_PAGE = 12;
 
     /**
+     * Index page
+     *
      * @Route("/", name="figure_index", methods={"GET"})
      * @param FigureRepository $figureRepository
      * @param Request $request
@@ -41,7 +47,7 @@ class FigureController extends AbstractController
         PaginatorInterface $paginator
     ): Response
     {
-        $figures = $figureRepository->findAll();
+        $figures = $figureRepository->findBy([], ['created_at' => 'DESC']);
         $figures = $paginator->paginate(
             $figures,
             $request->query->getInt('page', 1),
@@ -51,7 +57,10 @@ class FigureController extends AbstractController
     }
 
     /**
+     * Create new figure
+     *
      * @Route("/figure/new", name="figure_new", methods={"GET", "POST"})
+     * @IsGranted("ROLE_ADMIN")
      * @param Request $request
      * @param FigureManager $figureManager
      * @return RedirectResponse|Response
@@ -67,6 +76,7 @@ class FigureController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $figure->setAuthor($this->getUser());
             $figureManager->save($figure);
             return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -78,7 +88,7 @@ class FigureController extends AbstractController
     }
 
     /**
-     * Show figure card
+     * Show figure informations
      *
      * @Route("/figure/show/{slug}", name="figure_show", methods={"GET"})
      * @param Figure $figure
@@ -143,9 +153,9 @@ class FigureController extends AbstractController
         GroupRepository $groupRepository
     ): Response
     {
+        $this->denyAccessUnlessGranted(FigureVoter::EDIT, $figure);
         $form = $this->createForm(FigureType::class, $figure);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $figureManager->save($figure);
             return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
@@ -169,8 +179,92 @@ class FigureController extends AbstractController
      */
     public function delete(Request $request, Figure $figure, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted(FigureVoter::DELETE, $figure);
         if ($this->isCsrfTokenValid('delete' . $figure->getId(), $request->request->get('_token'))) {
             $entityManager->remove($figure);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Delete image from figure
+     *
+     * @Route("/figure/image/delete/{id}", name="figure_image_delete", methods={"POST","GET"})
+     * @param Request $request
+     * @param Image $image
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function deleteImage(Request $request, Image $image, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted(FigureVoter::DELETE, $image->getFigure());
+        if ($this->isCsrfTokenValid('delete-image' . $image->getId(), $request->request->get('_token'))) {
+            $figure = $image->getFigure();
+            $figure->removeImage($image);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+    /**
+     * Edit image
+     *
+     * @Route("/figure/image/edit/{id}", name="figure_image_edit", methods={"POST","GET"})
+     * @param Request $request
+     * @param Image $image
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function updateImage(Request $request, Image $image, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted(FigureVoter::EDIT, $image->getFigure());
+        if ($this->isCsrfTokenValid('update-image' . $image->getId(), $request->request->get('_token'))) {
+            $newImageUrl = $request->request->get('new_url');
+            $image->setUrl($newImageUrl);
+            $entityManager->persist($image);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Delete video
+     *
+     * @Route("/figure/video/delete/{id}", name="figure_video_delete", methods={"POST","GET"})
+     * @param Request $request
+     * @param Video $video
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function deleteVideo(Request $request, Video $video, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted(FigureVoter::DELETE, $video->getFigure());
+        if ($this->isCsrfTokenValid('delete-video' . $video->getId(), $request->request->get('_token'))) {
+            $figure = $video->getFigure();
+            $figure->removeVideo($video);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Edit video
+     *
+     * @Route("/figure/video/edit/{id}", name="figure_video_edit", methods={"POST","GET"})
+     * @param Request $request
+     * @param Video $video
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function editVideo(Request $request, Video $video, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted(FigureVoter::EDIT, $video->getFigure());
+        if ($this->isCsrfTokenValid('update-video' . $video->getId(), $request->request->get('_token'))) {
+            $newVideoUrl = $request->request->get('new_url');
+            $video->setUrl($newVideoUrl);
+            $entityManager->persist($video);
             $entityManager->flush();
         }
         return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);

@@ -8,6 +8,7 @@ use App\Managers\GroupManager;
 use App\Repository\FigureRepository;
 use App\Repository\GroupRepository;
 use http\Exception;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,6 +34,9 @@ class GroupController extends AbstractController
     }
 
     /**
+     * List all role
+     *
+     * @IsGranted("ROLE_ADMIN")
      * @Route("/", name="group_list")
      */
     public function list(): Response
@@ -44,7 +48,10 @@ class GroupController extends AbstractController
     }
 
     /**
+     * Create new group
+     *
      * @Route("/new", name="group_new", methods={"GET", "POST"})
+     * @IsGranted("ROLE_ADMIN")
      *
      * @param Request $request
      * @param GroupManager $groupManager
@@ -68,6 +75,8 @@ class GroupController extends AbstractController
     }
 
     /**
+     * Show by group
+     *
      * @Route("/{id}", name="figures_group", methods={"GET"})
      * @param Group $group
      * @param FigureRepository $figureRepository

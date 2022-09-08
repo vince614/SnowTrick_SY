@@ -9,7 +9,13 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
 {
-    #[Route(path: '/login', name: 'app_login')]
+    /**
+     * Login
+     *
+     * @Route("/login", name="app_login")
+     * @param AuthenticationUtils $authenticationUtils
+     * @return Response
+     */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         // Redirect if user
@@ -29,7 +35,12 @@ class SecurityController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-    #[Route(path: '/admin', name: 'app_admin')]
+    /**
+     * Admin
+     *
+     * @Route("/admin", name="app_admin")
+     *
+     */
     public function adminSection()
     {
         // If not login redirect to login page
