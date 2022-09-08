@@ -26,7 +26,7 @@
     <div class="card_container figureCardContainer" id="figures">
         {% for figure in figures %}
             <div class="card" style="width: 15rem; margin: 5px;">
-                <img class="card-img-top" src="{{ figure.imageUrl }}" alt="Card image cap">
+                <img class="card-img-top" src="{{ asset('uploads/images/' ~ figure.imageUrl) }}" alt="Card image cap">
                 <div class="card-body">
                     <a href="{{ path('figure_show', {'slug': figure.slug}) }}">
                         <h5 class="card-title">{{ figure.name|length > 17 ? figure.name|slice(0, 17) ~ '...' : figure.name }}</h5>

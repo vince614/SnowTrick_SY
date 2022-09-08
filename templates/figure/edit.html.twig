@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block header %}
-    <div class="p-5 text-center bg-image" style="background-image: url('{{ figure.imageUrl }}');height: 600px;">
+    <div class="p-5 text-center bg-image" style="background-image: url('{{ asset('uploads/images/' ~ figure.imageUrl) }}');height: 600px;">
         <div class="mask" style="background-color: rgba(0, 0, 0, .4);">
             <div class="d-flex justify-content-center align-items-center h-100">
                 <div style="cursor: pointer;" id="figure_name" class="text-white figureName">
@@ -58,7 +58,7 @@
                 {% endfor %}
             </select>
             <input type="hidden" id="figure_name_input" name="figure[name]" value="{{ figure.name }}">
-            <input type="file" accept="image/*" id="figure_image_input" name="figure[image]" value="{{ figure.imageUrl }}">
+            <input type="file" accept="image/*" id="figure_image_input" name="figure[image]" value="{{ asset('uploads/images/' ~ figure.imageUrl) }}">
             <input type="hidden" name="figure[_token]" value="{{ firgureForm._token.vars.value }}">
             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ figure.id) }}">
             <div class="manage_button_container">

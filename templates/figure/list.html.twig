@@ -9,7 +9,7 @@
     <div class="card_container" style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: center; width: 100%;">
         {% for figure in figures %}
             <div class="card m-2" style="width: 18rem;">
-                <img src="{{ figure.imageUrl }}" class="card-img-top" alt="{{ figure.name }}"/>
+                <img src="{{ asset('uploads/images/' ~ figure.imageUrl) }}" class="card-img-top" alt="{{ figure.name }}"/>
                 <div class="card-body">
                     <a href="{{ path('figure_show', {'slug': figure.slug}) }}"><h5 class="card-title ">{{ figure.name }}</h5></a>
                     <p class="card-text">
