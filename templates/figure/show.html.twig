@@ -86,12 +86,12 @@
             </div>
             <hr/>
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                <h3>Ecrire un commentaire</h3>
                 <form class="form-block">
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="form-group">
-                                <textarea class="form-input" required="" placeholder="Ecrivez votre commentaire sur ce post, veuillez restez respectueux et courtois."></textarea>
+                                <label class="form-label" for="comment">Ecrire un commentaire</label>
+                                <textarea id="comment" class="form-input" required="" placeholder="Ecrivez votre commentaire sur ce post, veuillez restez respectueux et courtois."></textarea>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Envoyer</button>

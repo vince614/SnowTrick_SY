@@ -62,7 +62,7 @@ class UserManager extends AbstractManager
      * @param User $user
      * @return void
      */
-    private function encodePassword(User $user): void
+    public function encodePassword(User $user): void
     {
         $user->setPassword(
             $this->passwordEncoder->hashPassword(

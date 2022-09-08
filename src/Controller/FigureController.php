@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Figure;
+use App\Entity\Image;
+use App\Entity\Video;
 use App\Form\FigureType;
 use App\Repository\FigureRepository;
 use App\Repository\GroupRepository;
@@ -179,6 +181,89 @@ class FigureController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $figure->getId(), $request->request->get('_token'))) {
             $entityManager->remove($figure);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Delete image from figure
+     *
+     * @Route("/figure/image/delete/{id}", name="figure_image_delete", methods={"POST","GET"})
+     * @IsGranted("ROLE_ADMIN")
+     * @param Request $request
+     * @param Image $image
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function deleteImage(Request $request, Image $image, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete-image' . $image->getId(), $request->request->get('_token'))) {
+            $figure = $image->getFigure();
+            $figure->removeImage($image);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+    /**
+     * Edit image
+     *
+     * @Route("/figure/image/edit/{id}", name="figure_image_edit", methods={"POST","GET"})
+     * @IsGranted("ROLE_ADMIN")
+     * @param Request $request
+     * @param Image $image
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function updateImage(Request $request, Image $image, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('update-image' . $image->getId(), $request->request->get('_token'))) {
+            $newImageUrl = $request->request->get('new_url');
+            $image->setUrl($newImageUrl);
+            $entityManager->persist($image);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Delete video
+     *
+     * @Route("/figure/video/delete/{id}", name="figure_video_delete", methods={"POST","GET"})
+     * @IsGranted("ROLE_ADMIN")
+     * @param Request $request
+     * @param Video $video
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function deleteVideo(Request $request, Video $video, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete-video' . $video->getId(), $request->request->get('_token'))) {
+            $figure = $video->getFigure();
+            $figure->removeVideo($video);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Edit video
+     *
+     * @Route("/figure/video/edit/{id}", name="figure_video_edit", methods={"POST","GET"})
+     * @IsGranted("ROLE_ADMIN")
+     * @param Request $request
+     * @param Video $video
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function editVideo(Request $request, Video $video, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('update-video' . $video->getId(), $request->request->get('_token'))) {
+            $newVideoUrl = $request->request->get('new_url');
+            $video->setUrl($newVideoUrl);
+            $entityManager->persist($video);
             $entityManager->flush();
         }
         return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
