@@ -8,7 +8,7 @@
                 </div>
             </div>
             <div class="actions_container">
-                <a class="btn btn-primary" id="figure_image_url" href="#">
+                <a class="btn btn-primary" id="figure_image" href="#">
                     <i class="fas fa-edit"></i>
                 </a>
             </div>
@@ -58,7 +58,7 @@
                 {% endfor %}
             </select>
             <input type="hidden" id="figure_name_input" name="figure[name]" value="{{ figure.name }}">
-            <input type="hidden" id="figure_image_url_input" name="figure[imageUrl]" value="{{ figure.imageUrl }}">
+            <input type="file" accept="image/*" id="figure_image_input" name="figure[image]" value="{{ figure.imageUrl }}">
             <input type="hidden" name="figure[_token]" value="{{ firgureForm._token.vars.value }}">
             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ figure.id) }}">
             <div class="manage_button_container">
@@ -94,18 +94,8 @@
             if (figureName) $('#figure_name_input').val(figureName);
         });
         // Update figure image url
-        $('#figure_image_url').click(async () => {
-            const { value: figureImage } = await Swal.fire({
-                title: "Modifier l'image de la figure",
-                input: 'textarea',
-                inputLabel: 'Url de la figure',
-                inputValue: '{{ figure.imageUrl }}',
-                showCancelButton: true,
-                inputValidator: (value) => {
-                    if (!value) return 'Vous devez écrire quelque chose!';
-                }
-            });
-            if (figureImage) $('#figure_image_url_input').val(figureImage);
+        $('#figure_image').click(() => {
+            $('#figure_image_input').trigger('click');
         });
 
         // Delete figure
