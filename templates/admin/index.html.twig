@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin - SnowTricks{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Panel d'administration</h1>
+        <span class="text-muted">Gérez les différentes entité du site.</span>
+        <hr/>
+        <a class="btn btn-primary button-icon" href="{{ path('app_admin_users') }}"><i class="fas fa-user"></i>Gestion des utilisateurs</a>
+        <a class="btn btn-primary button-icon" href="{{ path('app_admin_figures') }}"><i class="fas fa-newspaper"></i>Gestion des figures</a>
+        <a class="btn btn-primary button-icon" href="{{ path('app_admin_comments') }}"><i class="fas fa-comment"></i>Gestion des commentaires</a>
+    </div>
+{% endblock %}

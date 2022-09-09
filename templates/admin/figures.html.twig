@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="header d-flex" style="justify-content: center;">
+        <h1 class="title" style="text-transform: uppercase; font-weight: bolder;">Liste des figures</h1>
+    </div>
+    <a href="{{ path('app_admin') }}" class="btn btn-primary button-icon"><i class="fas fa-arrow-alt-circle-left"></i>Retour au panel d'adiministration</a>
+    <hr/>
+    <div class="card_container" style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: center; width: 100%;">
+        {% for figure in figures %}
+            <div class="card m-2" style="width: 18rem;">
+                <img src="{{ asset('uploads/images/' ~ figure.imageUrl) }}" class="card-img-top" alt="{{ figure.name }}"/>
+                <div class="card-body">
+                    <a href="{{ path('figure_show', {'slug': figure.slug}) }}"><h5 class="card-title ">{{ figure.name }}</h5></a>
+                    <p class="card-text">
+                        {{ figure.description|length > 300 ? figure.description|slice(0, 300) ~ '...' : figure.description }}
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">Post crée le {{ figure.createdAt|date("d/m/Y") }}</small>
+                    </p>
+                    <div class="btn-group">
+                        <a tooltip="Editer la figure" href="{{ path('figure_edit', {'id': figure.id}) }}" class="btn btn-primary">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a tooltip="Supprimer la figure" style="color: white;" onclick="deleteFigure('{{ path('figure_delete', {'id': figure.id}) }}', '{{ csrf_token('delete' ~ figure.id) }}')" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <h2>No records found</h2>
+        {% endfor %}
+    </div>
+    <br/>
+    <br/>
+    <div class="pagination_container">
+        {{ knp_pagination_render(figures) }}
+    </div>
+{% endblock %}
+
+{% block title %}
+    Admin - Figures
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        /**
+         * Delete figure
+         *
+         * @param path
+         * @param token
+         */
+        function deleteFigure(path, token) {
+            Swal.fire({
+                title: 'Etes vous sûr ?',
+                text: "Vous n'allez pas pouvoir revenir en arrière",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, supprimer !'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post(path, {
+                        _token: token
+                    }).done(function () {
+                        Swal.fire(
+                            'Supprimer !',
+                            'La figure à été supprimer',
+                            'success'
+                        )
+                    });
+                }
+            })
+        }
+    </script>
+{% endblock %}
+

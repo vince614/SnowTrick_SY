@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="header d-flex" style="justify-content: center;">
+        <h1 class="title" style="text-transform: uppercase; font-weight: bolder;">Liste des commentaires non validé</h1>
+    </div>
+    <a href="{{ path('app_admin') }}" class="btn btn-primary button-icon"><i class="fas fa-arrow-alt-circle-left"></i>Retour au panel d'adiministration</a>
+    <hr/>
+    <div class="card_container" style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: center; width: 100%;">
+        {% for comment in comments %}
+            <div class="card m-2" style="width: 18rem;">
+                <div class="card-body">
+                    <a href="{{ path('figure_show', {'slug': comment.figure.slug}) }}"><h5 class="card-title ">{{ comment.figure.name }}</h5></a>
+                    <p class="card-text">
+                        {{ comment.comment|length > 300 ? comment.comment|slice(0, 300) ~ '...' : comment.comment }}
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">Commentaire crée par
+                            <a href="{{ path('user_profile', {'id': comment.user.id }) }}">{{ comment.user.username }}</a> le {{ comment.createdAt|date("d/m/Y") }}
+                        </small>
+                    </p>
+                    <div class="btn-group">
+                        <a tooltip="Valider le commentaire" href="" class="btn btn-success">
+                            <i class="fas fa-check"></i>
+                        </a>
+                        <a tooltip="Supprimer le commentaire" style="color: white;" onclick="" class="btn btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <h2>No records found</h2>
+        {% endfor %}
+    </div>
+    <br/>
+    <br/>
+    <div class="pagination_container">
+        {{ knp_pagination_render(comments) }}
+    </div>
+{% endblock %}
+
+{% block title %}
+    Admin - Comments
+{% endblock %}
+
