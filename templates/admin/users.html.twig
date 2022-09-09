@@ -17,7 +17,8 @@
                         <small class="text-muted">Utilisateur crée le {{ user.createdAt|date("d/m/Y") }}</small>
                     </p>
                     <div class="btn-group">
-                        <a tooltip="Supprimer la l'utilisateur" style="color: white;" onclick="" class="btn btn-danger">
+                        <a tooltip="Supprimer la l'utilisateur" style="color: white;"
+                           onclick="deleteUser('{{ path('user_delete', {'id': user.id}) }}', '{{ csrf_token('delete' ~ user.id) }}')" class="btn btn-danger">
                             <i class="fas fa-trash"></i>
                         </a>
                     </div>
@@ -33,6 +34,40 @@
         {{ knp_pagination_render(users) }}
     </div>
 
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        /**
+         * Delete user
+         *
+         * @param path
+         * @param token
+         */
+        function deleteUser(path, token) {
+            Swal.fire({
+                title: 'Etes vous sûr ?',
+                text: "Vous n'allez pas pouvoir revenir en arrière",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, supprimer !'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post(path, {
+                        _token: token
+                    }).done(function () {
+                        Swal.fire(
+                            'Supprimer !',
+                            "L'utilisateur à été supprimer",
+                            'success'
+                        )
+                    });
+                }
+            })
+        }
+    </script>
 {% endblock %}
 
 {% block title %}

@@ -309,7 +309,7 @@ a {
     margin: 0 5px;
 }
 
-.button-icon svg {
+.button-icon svg, .button-icon i {
     margin-right: 10px;
 }
 

@@ -64,7 +64,7 @@ class User implements UserInterface, Serializable, EntityInterface, PasswordAuth
     private array $roles = [];
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="user")
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="user", cascade={"remove"})
      */
     private $comments;
 
@@ -74,7 +74,7 @@ class User implements UserInterface, Serializable, EntityInterface, PasswordAuth
     private $avatarUrl;
 
     /**
-     * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="author")
+     * @ORM\OneToMany(targetEntity=Figure::class, mappedBy="author", cascade={"remove"})
      */
     private $figures;
 
