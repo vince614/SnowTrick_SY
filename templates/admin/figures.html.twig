@@ -5,6 +5,7 @@
         <h1 class="title" style="text-transform: uppercase; font-weight: bolder;">Liste des figures</h1>
     </div>
     <a href="{{ path('app_admin') }}" class="btn btn-primary button-icon"><i class="fas fa-arrow-alt-circle-left"></i>Retour au panel d'adiministration</a>
+    <a href="{{ path('figure_new') }}" class="btn btn-success button-icon"><i class="fas fa-plus-circle"></i>Ajouter une figure</a>
     <hr/>
     <div class="card_container" style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: center; width: 100%;">
         {% for figure in figures %}
