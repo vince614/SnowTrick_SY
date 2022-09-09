@@ -90,23 +90,4 @@ class UserController extends AbstractController
             'form' => $form,
         ]);
     }
-
-    /**
-     * Delete user
-     *
-     * @Route("/{id}", name="user_delete", methods={"POST"})
-     * @param Request $request
-     * @param User $user
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($user);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
-    }
 }

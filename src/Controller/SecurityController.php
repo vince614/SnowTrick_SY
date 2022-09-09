@@ -34,20 +34,4 @@ class SecurityController extends AbstractController
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
-
-    /**
-     * Admin
-     *
-     * @Route("/admin", name="app_admin")
-     *
-     */
-    public function adminSection()
-    {
-        // If not login redirect to login page
-        if (!$this->getUser()) return $this->redirectToRoute('app_login');
-
-        $user = $this->getUser();
-        // Check user role
-        return $this;
-    }
 }
