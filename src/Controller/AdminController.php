@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\User;
 use App\Repository\CommentRepository;
 use App\Repository\FigureRepository;
@@ -73,7 +74,7 @@ class AdminController extends AbstractController
      */
     public function manageComments(Request $request, CommentRepository $commentRepository): Response
     {
-        $comments = $commentRepository->findBy([], ['created_at' => 'DESC']);
+        $comments = $commentRepository->findBy(['valid' => false], ['created_at' => 'DESC']);
         $comments = $this->paginator->paginate(
             $comments,
             $request->query->getInt('page', 1),
@@ -121,6 +122,46 @@ class AdminController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('app_admin', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Delete comments
+     *
+     * @IsGranted("ROLE_ADMIN")
+     * @Route("/admin/comments/delete/{id}", name="comment_delete", methods={"POST"})
+     * @param Request $request
+     * @param Comment $comment
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function deleteComment(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $comment->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($comment);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('app_admin', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+    /**
+     * Validate comment
+     *
+     * @IsGranted("ROLE_ADMIN")
+     * @Route("/admin/comments/validate/{id}", name="comment_validate", methods={"POST"})
+     * @param Request $request
+     * @param Comment $comment
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function validateComment(Request $request, Comment $comment, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('validate' . $comment->getId(), $request->request->get('_token'))) {
+            $comment->setValid(true);
+            $entityManager->persist($comment);
             $entityManager->flush();
         }
         return $this->redirectToRoute('app_admin', [], Response::HTTP_SEE_OTHER);

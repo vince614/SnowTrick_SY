@@ -47,8 +47,7 @@
 
     <div class="container">
         <div class="be-comment-block">
-            <h1 class="comments-title">Comment{{ figure.comments.count > 0 ? 's' : '' }} ({{ figure.comments.count }})</h1>
-
+            <h1 class="comments-title">Comment{{ comments.count > 0 ? 's' : '' }} ({{ comments.count }})</h1>
             {% for comment in comments %}
                 <div class="be-comment">
                     <div class="be-img-comment">
@@ -76,17 +75,15 @@
             </div>
             <hr/>
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                <form class="form-block">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <label class="form-label" for="comment">Ecrire un commentaire</label>
-                                <textarea id="comment" class="form-input" required="" placeholder="Ecrivez votre commentaire sur ce post, veuillez restez respectueux et courtois."></textarea>
-                            </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="form-group">
+                            <label class="form-label" for="comment-content">Ecrire un commentaire</label>
+                            <textarea style="color: #383b43;" id="comment-content" class="form-input" required="" placeholder="Ecrivez votre commentaire sur ce post, veuillez restez respectueux et courtois."></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Envoyer</button>
                     </div>
-                </form>
+                    <a style="color: white;" onclick="sendComment('{{ path('figure_comment_send', {'id': figure.id}) }}', '{{ csrf_token('send-comment' ~ figure.id) }}')" class="btn btn-primary">Envoyer</a>
+                </div>
             {% else %}
                 Vous devez être connecté pour écrire un commentaire
             {% endif %}
@@ -94,6 +91,37 @@
     </div>
 
 {% endblock %}
+
+{% block javascripts %}
+    <script>
+        function sendComment(path, token) {
+            let commentContent = $('#comment-content').val();
+            Swal.fire({
+                title: 'Etes vous sûr de vouloir envoyé ce commentaire ?',
+                text: commentContent,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, envoyer !'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post(path, {
+                        _token: token,
+                        comment: commentContent
+                    }).done(function () {
+                        Swal.fire(
+                            'Supprimer !',
+                            "Votre commentaire à été envoyé, il est maitenant en cours d'évalutation par nos administrateurs",
+                            'success'
+                        )
+                    });
+                }
+            })
+        }
+    </script>
+{% endblock %}
+
 {% block title %}
     {{ figure.group.name }} - {{ figure.name }}
 {% endblock %}

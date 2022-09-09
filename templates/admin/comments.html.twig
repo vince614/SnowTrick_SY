@@ -2,7 +2,7 @@
 
 {% block body %}
     <div class="header d-flex" style="justify-content: center;">
-        <h1 class="title" style="text-transform: uppercase; font-weight: bolder;">Liste des commentaires non validé</h1>
+        <h1 class="title" style="text-transform: uppercase; font-weight: bolder;">commentaires invalidés</h1>
     </div>
     <a href="{{ path('app_admin') }}" class="btn btn-primary button-icon"><i class="fas fa-arrow-alt-circle-left"></i>Retour au panel d'adiministration</a>
     <hr/>
@@ -20,10 +20,12 @@
                         </small>
                     </p>
                     <div class="btn-group">
-                        <a tooltip="Valider le commentaire" href="" class="btn btn-success">
+                        <a tooltip="Valider le commentaire" style="color: white;" class="btn btn-success"
+                            onclick="validateComment('{{ path('comment_validate', {'id': comment.id}) }}', '{{ csrf_token('validate' ~ comment.id) }}')">
                             <i class="fas fa-check"></i>
                         </a>
-                        <a tooltip="Supprimer le commentaire" style="color: white;" onclick="" class="btn btn-danger">
+                        <a tooltip="Supprimer le commentaire" style="color: white;" class="btn btn-danger"
+                            onclick="deleteComment('{{ path('comment_delete', {'id': comment.id}) }}', '{{ csrf_token('delete' ~ comment.id) }}')">
                             <i class="fas fa-trash"></i>
                         </a>
                     </div>
@@ -39,6 +41,70 @@
         {{ knp_pagination_render(comments) }}
     </div>
 {% endblock %}
+
+{% block javascripts %}
+    <script>
+        /**
+         * Delete comment
+         *
+         * @param path
+         * @param token
+         */
+        function deleteComment(path, token) {
+            Swal.fire({
+                title: 'Etes vous sûr ?',
+                text: "Vous n'allez pas pouvoir revenir en arrière",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, supprimer !'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post(path, {
+                        _token: token
+                    }).done(function () {
+                        Swal.fire(
+                            'Supprimer !',
+                            'Le commentaire à été supprimer',
+                            'success'
+                        )
+                    });
+                }
+            })
+        }
+
+        /**
+         * Validate comment
+         *
+         * @param path
+         * @param token
+         */
+        function validateComment(path, token) {
+            Swal.fire({
+                title: 'Etes vous sûr ?',
+                text: "En validation le commentaire il pourras appâraitre sur le site",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Oui, valider !'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post(path, {
+                        _token: token
+                    }).done(function () {
+                        Swal.fire(
+                            'Supprimer !',
+                            'Le commentaire à été validé',
+                            'success'
+                        )
+                    });
+                }
+            })
+        }
+    </script>
+{% endblock%}
 
 {% block title %}
     Admin - Comments

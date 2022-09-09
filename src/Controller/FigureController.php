@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Comment;
 use App\Entity\Figure;
 use App\Entity\Image;
 use App\Entity\Video;
 use App\Form\FigureType;
+use App\Managers\CommentManager;
+use App\Repository\CommentRepository;
 use App\Repository\FigureRepository;
 use App\Repository\GroupRepository;
 use App\Security\Voter\FigureVoter;
@@ -106,15 +109,17 @@ class FigureController extends AbstractController
      * @param Figure $figure
      * @param Request $request
      * @param PaginatorInterface $paginator
+     * @param CommentRepository $commentRepository
      * @return Response
      */
     public function show(
         Figure $figure,
         Request $request,
-        PaginatorInterface $paginator
+        PaginatorInterface $paginator,
+        CommentRepository $commentRepository
     ): Response
     {
-        $comments = $figure->getComments();
+        $comments = $commentRepository->findActivatedComment($figure->getId());
         $comments = $paginator->paginate(
             $comments,
             $request->query->getInt('page', 1),
@@ -284,6 +289,32 @@ class FigureController extends AbstractController
             $video->setUrl($newVideoUrl);
             $entityManager->persist($video);
             $entityManager->flush();
+        }
+        return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Send comment
+     *
+     * @Route("/figure/comment/send/{id}", name="figure_comment_send", methods={"POST","GET"})
+     * @IsGranted("IS_AUTHENTICATED")
+     * @param Request $request
+     * @param Figure $figure
+     * @param CommentManager $commentManager
+     * @return Response
+     */
+    public function sendComment(Request $request, Figure $figure, CommentManager $commentManager): Response
+    {
+        if ($this->isCsrfTokenValid('send-comment' . $figure->getId(), $request->request->get('_token'))) {
+            $commentContent  = $request->request->get('comment');
+            if ($commentContent) {
+                $comment = new Comment();
+                $comment
+                    ->setFigure($figure)
+                    ->setUser($this->getUser())
+                    ->setComment($commentContent);
+                $commentManager->save($comment);
+            }
         }
         return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
     }
