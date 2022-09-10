@@ -93,7 +93,7 @@ class FigureController extends AbstractController
             }
             $figure->setAuthor($this->getUser());
             $figureManager->save($figure);
-            return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('figure_show', ['slug' => $figure->getSlug()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('figure/new.html.twig', [
@@ -181,7 +181,7 @@ class FigureController extends AbstractController
                 $figure->setImageUrl($newFilename);
             }
             $figureManager->save($figure);
-            return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('figure_show', ['slug' => $figure->getSlug()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('figure/edit.html.twig', [
@@ -230,28 +230,6 @@ class FigureController extends AbstractController
         return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
     }
 
-
-    /**
-     * Edit image
-     *
-     * @Route("/figure/image/edit/{id}", name="figure_image_edit", methods={"POST","GET"})
-     * @param Request $request
-     * @param Image $image
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    public function updateImage(Request $request, Image $image, EntityManagerInterface $entityManager): Response
-    {
-        $this->denyAccessUnlessGranted(FigureVoter::EDIT, $image->getFigure());
-        if ($this->isCsrfTokenValid('update-image' . $image->getId(), $request->request->get('_token'))) {
-            $newImageUrl = $request->request->get('new_url');
-            $image->setUrl($newImageUrl);
-            $entityManager->persist($image);
-            $entityManager->flush();
-        }
-        return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
-    }
-
     /**
      * Delete video
      *
@@ -290,6 +268,38 @@ class FigureController extends AbstractController
             $entityManager->persist($video);
             $entityManager->flush();
         }
+        return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * Add new video
+     *
+     * @Route("/figure/video/new/{id}", name="figure_video_new", methods={"POST","GET"})
+     * @param Request $request
+     * @param Figure $figure
+     * @param EntityManagerInterface $entityManager
+     * @param FigureManager $figureManager
+     * @return Response
+     */
+    public function newVideo(
+        Request $request,
+        Figure $figure,
+        EntityManagerInterface $entityManager,
+        FigureManager $figureManager
+    ): Response
+    {
+        $this->denyAccessUnlessGranted(FigureVoter::EDIT, $figure);
+        if ($this->isCsrfTokenValid('add-video' . $figure->getId(), $request->request->get('_token'))) {
+            $video = new Video();
+            $newVideoUrl = $request->request->get('new_url');
+            $video
+                ->setName($figure->getName())
+                ->setFigure($figure)
+                ->setUrl($newVideoUrl);
+            $entityManager->persist($video);
+            $entityManager->flush();
+        }
+        $figureManager->save($figure);
         return $this->redirectToRoute('figure_index', [], Response::HTTP_SEE_OTHER);
     }
 

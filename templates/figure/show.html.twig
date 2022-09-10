@@ -23,7 +23,7 @@
     <div class="gallery">
         {% for image in figure.images %}
             <div class="item">
-                <img alt="{{ image.name }}" src="{{ image.url }}">
+                <img alt="{{ image.name }}" src="{{ asset('uploads/images/' ~ image.url) }}">
             </div>
         {% endfor %}
         {% for video in figure.videos %}

@@ -20,10 +20,12 @@
                 <div onclick="deleteItem('{{ path('figure_image_delete', {'id': image.id}) }}', '{{ csrf_token('delete-image' ~ image.id) }}')" class="delete bg-danger" tooltip="Supprimer">
                     <i class="fas fa-trash"></i>
                 </div>
-                <div onclick="editItem('{{ path('figure_image_edit', {'id': image.id}) }}', '{{ csrf_token('update-image' ~ image.id) }}', '{{ image.url }}')" class="edit bg-primary" tooltip="Editer">
-                    <i class="fas fa-edit"></i>
-                </div>
-                <img style="filter: brightness(.5);" alt="{{ image.name }}" src="{{ image.url }}">
+                <a href="{{ path('figure_image_edit', {'id': image.id}) }}">
+                    <div class="edit bg-primary" tooltip="Editer">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                </a>
+                <img style="filter: brightness(.5);" alt="{{ image.name }}" src="{{ asset('uploads/images/' ~ image.url) }}">
             </div>
         {% endfor %}
         {% for video in figure.videos %}
@@ -37,7 +39,7 @@
                 <iframe style="filter: brightness(.5);" src="{{ video.url }}" frameborder="0" allowfullscreen></iframe>
             </div>
         {% endfor %}
-        <div class="item add" tooltip="Ajouter une nouvelle image">
+        <div onclick="newItem('{{ path('figure_image_new', {'id': figure.id }) }}', '{{ path('figure_video_new', {'id': figure.id }) }}', '{{ csrf_token('add-video' ~ figure.id) }}')" class="item add" tooltip="Ajouter une nouvelle image">
             <i class="fas fa-add"></i>
         </div>
     </div>
@@ -160,9 +162,9 @@
          * @param csrfToken
          * @param url
          */
-        async function editItem(pathUrl, csrfToken, url) {
+        async function editItem(pathUrl, csrfToken, url = false) {
             const { value: newUrl } = await Swal.fire({
-                title: "Modifier l'url de l'élement",
+                title: url ? "Modifier l'url de l'élement" : "Entrez l'url de votre video",
                 input: 'textarea',
                 inputLabel: "Url de l'élément",
                 inputValue: url,
@@ -184,6 +186,26 @@
                 });
             }
         }
+
+        /**
+         * Add new item to figure
+         * @param newImagePath
+         * @param newVideoPath
+         * @param token
+         */
+        function newItem(newImagePath, newVideoPath, token) {
+            Swal.fire({
+                title: 'Galerie',
+                html: "<span class='text-muted'>Veuillez sélectionner une réponse</span>" +
+                    "<br>" +
+                    "<br>" +
+                    '<a onclick="editItem(`' + newVideoPath + '`, `' + token + '`)" style="color: white; margin-right: 10px;" class="btn btn-primary">Ajouter une video</a>' +
+                    '<a href="' + newImagePath + '" style="color: white" class="btn btn-primary">Ajouter une image</a>',
+                showCancelButton: false,
+                showConfirmButton: false
+            });
+        }
+
     </script>
 {% endblock %}
 {% block title %}

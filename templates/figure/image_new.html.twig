@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <h1>Ajout d'une nouvelle image</h1>
+    <br/>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn btn-primary">{{ button_label|default('Ajouter') }}</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
+
+{% block title %}
+    Image - New
+{% endblock %}
+
